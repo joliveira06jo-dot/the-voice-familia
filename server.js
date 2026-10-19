@@ -9,9 +9,8 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Estado Global do Jogo
 let gameState = {
-    status: 'aguardando', // 'aguardando', 'rodando', 'finalizado'
+    status: 'aguardando', // 'aguardando', 'rodando', 'votacao_encerrada', 'finalizado'
     cantor: '',
     artista: '',
     musica: '',
@@ -20,25 +19,19 @@ let gameState = {
 };
 
 io.on('connection', (socket) => {
-    console.log(`Novo usuário conectado: ${socket.id}`);
-
-    // Envia o estado atual assim que alguém conecta
     socket.emit('updateState', gameState);
 
-    // Registro de Jurado
     socket.on('registrarJurado', (nome) => {
         gameState.jurados[socket.id] = { nome: nome, virou: false };
         io.emit('updateState', gameState);
     });
 
-    // Admin inicia a rodada
     socket.on('iniciarRodada', (data) => {
         gameState.status = 'rodando';
         gameState.cantor = data.cantor;
         gameState.artista = data.artista;
         gameState.musica = data.musica;
         
-        // Reseta o status de virada de todos os jurados para a nova música
         for (let id in gameState.jurados) {
             gameState.jurados[id].virou = false;
         }
@@ -46,44 +39,55 @@ io.on('connection', (socket) => {
         io.emit('updateState', gameState);
     });
 
-    // Jurado clica para virar a cadeira
     socket.on('virarCadeira', () => {
         if (gameState.status === 'rodando' && gameState.jurados[socket.id]) {
             gameState.jurados[socket.id].virou = true;
             io.emit('updateState', gameState);
-            // Avisa todas as telas para disparar o som e efeito da cadeira
-            io.emit('cadeiraVirou', socket.id);
+            io.emit('cadeiraVirou', { socketId: socket.id, nome: gameState.jurados[socket.id].nome });
         }
     });
 
-    // Admin finaliza a rodada
+    socket.on('encerrarVotacao', () => {
+        gameState.status = 'votacao_encerrada';
+        io.emit('updateState', gameState);
+    });
+
     socket.on('finalizarRodada', () => {
-        gameState.status = 'finalizado';
-        
-        // Salva no histórico
+        const totalJurados = Object.keys(gameState.jurados).length;
+        const viraramCount = Object.values(gameState.jurados).filter(j => j.virou).length;
+
         const resumoRodada = {
             cantor: gameState.cantor,
             artista: gameState.artista,
             musica: gameState.musica,
-            dataHora: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
-            juradosSnapshot: { ...gameState.jurados }
+            viraramCount: viraramCount,
+            totalJurados: totalJurados,
+            juradosDetalhados: Object.values(gameState.jurados).map(j => ({ nome: j.nome, virou: j.virou })),
+            dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
         };
-        gameState.historico.unshift(resumoRodada); // Adiciona no topo
+        
+        gameState.historico.unshift(resumoRodada);
+        gameState.status = 'aguardando';
+        gameState.cantor = '';
+        gameState.artista = '';
+        gameState.musica = '';
+
+        for (let id in gameState.jurados) {
+            gameState.jurados[id].virou = false;
+        }
 
         io.emit('updateState', gameState);
     });
 
-    // Desconexão do usuário
     socket.on('disconnect', () => {
         if (gameState.jurados[socket.id]) {
             delete gameState.jurados[socket.id];
             io.emit('updateState', gameState);
         }
-        console.log(`Usuário desconectado: ${socket.id}`);
     });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 server.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor The Voice rodando na porta ${PORT}`);
 });
