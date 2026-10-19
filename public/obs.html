@@ -10,129 +10,108 @@
         body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
 
         /* Mensagens de Topo */
-        .header-msg { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
-        .header-msg.ativo { display: block; }
+        .status-container { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
+        .status-container.active { display: block; }
 
-        .title-aguardando { color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
-        .subtitle-aguardando { color: #cccccc; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
+        .txt-aguardando-1 { color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 12px rgba(0,0,0,0.9); }
+        .txt-aguardando-2 { color: #cccccc; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; text-shadow: 0 0 10px rgba(0,0,0,0.9); }
 
-        .pill-iniciada { display: inline-block; background: #00cc55; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #00cc55; }
-        .subtitle-iniciada { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 8px #000; }
+        .pill-green { display: inline-block; background: #00cc55; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #00cc55; }
+        .txt-sub-green { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
 
-        .pill-finalizada { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
-        .subtitle-finalizada { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 8px #000; }
+        .pill-red { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
+        .txt-sub-red { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
 
         /* Fileira de Cadeiras */
-        .cadeiras-wrapper { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
-        .cadeiras-wrapper.ativo { display: flex; }
+        .cadeiras-container { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
+        .cadeiras-container.active { display: flex; }
 
-        .cadeira-unit { display: flex; flex-direction: column; align-items: center; width: 100px; transition: transform 0.3s ease; }
-        .cadeira-unit.virada { transform: scale(1.15); z-index: 5; }
-
-        .cadeira-svg { width: 90px; height: 100px; filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.7)); }
+        .chair-card { display: flex; flex-direction: column; align-items: center; width: 110px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        .tag-jurado { margin-top: 4px; background: #000000; border: 1px solid #e50914; color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cadeira-unit.virada .tag-jurado { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 10px #e50914; }
+        /* Efeito de aumento rápido quando virar a cadeira */
+        .chair-card.virou {
+            animation: popCadeira 0.5s ease-out forwards;
+        }
+
+        @keyframes popCadeira {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.35); }
+            100% { transform: scale(1.18); }
+        }
+
+        .chair-img { width: 95px; height: 115px; object-fit: contain; filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.8)); }
+
+        .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; }
+        
+        .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
     </style>
 </head>
 <body>
 
-    <!-- Avisos de Status -->
-    <div id="msgAguardando" class="header-msg">
-        <div class="title-aguardando">AGUARDANDO JURADOS</div>
-        <div class="subtitle-aguardando">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+    <!-- Telas de Status de Topo -->
+    <div id="stAguardando" class="status-container">
+        <div class="txt-aguardando-1">AGUARDANDO JURADOS</div>
+        <div class="txt-aguardando-2">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
     </div>
 
-    <div id="msgIniciada" class="header-msg">
-        <div class="pill-iniciada">RODADA INICIADA!</div>
-        <div class="subtitle-iniciada">OS JURADOS IRÃO AVALIAR SUA APRESENTAÇÃO!</div>
+    <div id="stIniciada" class="status-container">
+        <div class="pill-green">RODADA INICIADA!</div>
+        <div class="txt-sub-green">OS JURADOS IRÃO AVALIAR SUA APRESENTAÇÃO!</div>
     </div>
 
-    <div id="msgFinalizada" class="header-msg">
-        <div class="pill-finalizada">RODADA FINALIZADA!</div>
-        <div class="subtitle-finalizada">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
+    <div id="stFinalizada" class="status-container">
+        <div class="pill-red">RODADA FINALIZADA!</div>
+        <div class="txt-sub-red">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
     </div>
 
-    <!-- Cadeiras no Topo -->
-    <div id="cadeirasRow" class="cadeiras-wrapper"></div>
+    <!-- Fileira com as Cadeiras dos Jurados -->
+    <div id="cadeirasRow" class="cadeiras-container"></div>
+
+    <!-- Efeito Sonoro da Cadeira -->
+    <audio id="audioVirada" src="/som-virada.mp3" preload="auto"></audio>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-
-        function emitirSomVirada() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(580, audioCtx.currentTime + 0.45);
-                
-                gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
-            } catch(e) {}
-        }
+        const audio = document.getElementById('audioVirada');
 
         socket.on('cadeiraVirou', () => {
-            emitirSomVirada();
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log('Aguardando interação no navegador para áudio:', e));
+            }
         });
 
-        function getCadeiraSVG(virada) {
-            if (virada) {
-                return `
-                <svg class="cadeira-svg" viewBox="0 0 100 110">
-                    <path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#e50914" stroke="#ffffff" stroke-width="3"/>
-                    <path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#b30000" stroke="#ffffff" stroke-width="2"/>
-                    <path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111111" stroke="#e50914" stroke-width="2"/>
-                    <text x="50" y="93" fill="#ffffff" font-size="7" font-weight="900" text-anchor="middle">EU QUERO VOCÊ</text>
-                </svg>`;
-            } else {
-                return `
-                <svg class="cadeira-svg" viewBox="0 0 100 110">
-                    <path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#333333" stroke="#666666" stroke-width="2"/>
-                    <path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#222222" stroke="#555555" stroke-width="2"/>
-                    <path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111111" stroke="#444444" stroke-width="2"/>
-                    <text x="50" y="93" fill="#777777" font-size="7" font-weight="900" text-anchor="middle">EU QUERO VOCÊ</text>
-                </svg>`;
-            }
-        }
-
         socket.on('updateState', (state) => {
-            const mAguardando = document.getElementById('msgAguardando');
-            const mIniciada = document.getElementById('msgIniciada');
-            const mFinalizada = document.getElementById('msgFinalizada');
+            const stAguardando = document.getElementById('stAguardando');
+            const stIniciada = document.getElementById('stIniciada');
+            const stFinalizada = document.getElementById('stFinalizada');
             const cadeirasRow = document.getElementById('cadeirasRow');
 
-            mAguardando.classList.remove('ativo');
-            mIniciada.classList.remove('ativo');
-            mFinalizada.classList.remove('ativo');
-            cadeirasRow.classList.remove('ativo');
+            stAguardando.classList.remove('active');
+            stIniciada.classList.remove('active');
+            stFinalizada.classList.remove('active');
+            cadeirasRow.classList.remove('active');
 
             if (state.status === 'aguardando') {
-                mAguardando.classList.add('ativo');
+                stAguardando.classList.add('active');
             } else if (state.status === 'rodando') {
-                cadeirasRow.classList.add('ativo');
+                cadeirasRow.classList.add('active');
 
                 let html = '';
                 Object.values(state.jurados).forEach(j => {
+                    const imgSrc = j.virou ? '/cadeira-colorida.png' : '/cadeira-pb.png';
+                    const virouClass = j.virou ? 'virou' : '';
                     html += `
-                        <div class="cadeira-unit ${j.virou ? 'virada' : ''}">
-                            ${getCadeiraSVG(j.virou)}
-                            <div class="tag-jurado">${j.nome}</div>
+                        <div class="chair-card ${virouClass}">
+                            <img class="chair-img" src="${imgSrc}" alt="Cadeira">
+                            <div class="jurado-tag">${j.nome}</div>
                         </div>
                     `;
                 });
                 cadeirasRow.innerHTML = html;
             } else if (state.status === 'votacao_encerrada' || state.status === 'finalizado') {
-                mFinalizada.classList.add('ativo');
+                stFinalizada.classList.add('active');
             }
         });
     </script>
