@@ -4,72 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Voice Família - Módulo Jurado</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; align-items: center; }
-        .card-jurado { width: 100%; max-width: 380px; background: rgba(10, 2, 20, 0.95); border: 2px solid #800db0; border-radius: 25px; padding: 20px; box-shadow: 0 0 20px rgba(128, 13, 176, 0.5); text-align: center; }
+        body { background: #0b0218 url('/fundo-palco.png') no-repeat center center fixed; background-size: cover; color: #000000; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+
+        /* Topo: Logo Ampliado + MÓDULO / JURADO em 2 linhas */
+        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 380px; margin-bottom: 15px; padding: 0 5px; }
+        .header-logo { height: 110px; max-width: 190px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8)); }
         
-        .header-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
-        .header-title span { color: #800db0; background: #fff; padding: 2px 8px; border-radius: 8px; margin-left: 5px; }
+        .header-title-box { display: flex; flex-direction: column; align-items: flex-end; }
+        .title-modulo { color: #ffffff; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.8); line-height: 1; }
+        .badge-jurado { background: #951573; color: #ffffff; padding: 4px 16px; border-radius: 12px; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-top: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.4); line-height: 1; }
 
-        .ola-nome { color: #a820d6; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+        /* Card Principal Branco */
+        .card-white { width: 100%; max-width: 380px; background: #ffffff; border-radius: 25px; padding: 22px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
 
-        .inner-box { background: #ffffff; border-radius: 20px; padding: 20px; color: #000; margin-bottom: 15px; }
-        .inner-box label { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px; color: #000; }
-        .inner-box input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #000; font-weight: 900; text-align: center; font-size: 1rem; outline: none; margin-bottom: 15px; }
+        .ola-jurado { color: #951573; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; margin-bottom: 16px; letter-spacing: 0.5px; }
 
-        .btn-purple { width: 100%; background: #a820d6; color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        /* Tela 1: Login */
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.85rem; font-weight: 900; margin-bottom: 8px; color: #000000; text-transform: uppercase; letter-spacing: 0.5px; }
+        input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #000000; background: #ffffff; color: #000000; font-size: 1rem; font-weight: 900; text-align: center; outline: none; }
 
-        .jurados-footer { margin-top: 15px; }
-        .jurados-footer label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 5px; color: #fff; }
-        .jurados-icons { display: flex; justify-content: center; gap: 6px; }
-        .user-icon { width: 20px; height: 20px; }
+        .btn-magenta { width: 100%; background: #951573; color: #ffffff; border: none; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(149, 21, 115, 0.4); margin-top: 10px; }
 
-        /* SVG Radar & Alert */
-        .svg-center { width: 110px; height: 110px; margin: 10px auto; display: block; }
-        .radar-sweep { transform-origin: center; animation: spin 2.5s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        .jurados-footer { margin-top: 18px; }
+        .jurados-label { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; color: #000000; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .jurados-icons { display: flex; justify-content: center; gap: 8px; }
+        .user-icon { width: 38px; height: 38px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
-        .txt-main { font-size: 1.1rem; font-weight: 900; color: #a820d6; text-transform: uppercase; margin-top: 10px; }
-        .txt-sub { font-size: 0.75rem; font-weight: 900; color: #666; text-transform: uppercase; margin-top: 4px; }
+        /* Tela 2: Radar de Aguardando */
+        .radar-box { width: 130px; height: 130px; margin: 10px auto 15px auto; position: relative; }
+        .radar-svg { width: 100%; height: 100%; }
+        .radar-sweep { transform-origin: 50px 50px; animation: spinRadar 2.2s linear infinite; }
+        @keyframes spinRadar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .pill-roxa { background: #a820d6; color: #fff; font-weight: 900; padding: 8px; border-radius: 8px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
-        .instrucao-txt { font-size: 0.8rem; font-weight: 900; color: #a820d6; text-transform: uppercase; margin-bottom: 8px; line-height: 1.2; }
-        .atencao-txt { font-size: 0.65rem; color: #666; font-weight: 700; margin-bottom: 15px; }
+        .txt-aguardando-title { color: #951573; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 6px; }
+        .txt-aguardando-sub { color: #555555; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .chair-preview-box { background: #dcdcdc; border-radius: 15px; padding: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; }
+        /* Tela 3: Vagas Lotadas */
+        .alert-svg { width: 120px; height: 120px; margin: 10px auto 15px auto; display: block; }
+        .txt-alert-title { color: #951573; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 8px; }
+        .txt-alert-sub { color: #555555; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; }
+
+        /* Tela 4: Votação em Andamento */
+        .pill-iniciada { background: #951573; color: #ffffff; font-size: 1.05rem; font-weight: 900; padding: 10px; border-radius: 12px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
+        .txt-instrucao { color: #951573; font-size: 0.95rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 8px; }
+        .txt-atencao { color: #666666; font-size: 0.65rem; font-weight: 800; margin-bottom: 14px; }
+
+        .preview-chairs-box { background: #dedede; border-radius: 18px; padding: 14px; display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 15px; }
+        .chair-prev-img { width: 65px; height: 80px; object-fit: contain; }
+        .arrow-prev { width: 35px; height: 30px; }
+
+        .btn-virar-cadeira { width: 100%; background: #951573; color: #ffffff; border: none; padding: 14px 18px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 14px rgba(149, 21, 115, 0.4); transition: transform 0.1s; }
+        .btn-virar-cadeira:active { transform: scale(0.98); }
+        .circle-icon { background: #ffffff; color: #951573; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 900; }
     </style>
 </head>
 <body>
 
-    <div class="card-jurado">
-        <div class="header-title">MÓDULO <span>JURADO</span></div>
+    <!-- Cabeçalho Topo -->
+    <div class="top-header">
+        <img src="/logo-thevoice.png" alt="The Voice Família" class="header-logo">
+        <div class="header-title-box">
+            <div class="title-modulo">MÓDULO</div>
+            <div class="badge-jurado">JURADO</div>
+        </div>
+    </div>
 
-        <!-- Tela 1: Login -->
+    <!-- Card Principal Branco -->
+    <div class="card-white">
+
+        <!-- Tela 1: Login de Jurado -->
         <div id="screenLogin">
-            <div class="inner-box">
+            <div class="form-group">
                 <label>INSIRA O SEU NOME</label>
-                <input type="text" id="inputNome" maxlength="15">
-                <button class="btn-purple" onclick="entrar()">ENTRAR COMO JURADO ❯❯</button>
+                <input type="text" id="inputNome" maxlength="15" placeholder="Ex: Felipinho">
             </div>
+            <button class="btn-magenta" onclick="entrar()">ENTRAR COMO JURADO ❯❯</button>
+            
             <div class="jurados-footer">
-                <label>JURADOS ONLINE</label>
+                <div class="jurados-label">JURADOS ONLINE</div>
                 <div class="jurados-icons" id="iconsLogin"></div>
             </div>
         </div>
 
-        <!-- Tela 2: Painel Principal -->
+        <!-- Tela 2: Painel Principal do Jurado -->
         <div id="screenPainel" style="display:none;">
-            <div class="ola-nome" id="txtOla">OLÁ, JURADO</div>
+            <div class="ola-jurado" id="txtOla">OLÁ, JURADO</div>
 
-            <div class="inner-box" id="boxConteudo"></div>
+            <div id="boxConteudo"></div>
 
             <div class="jurados-footer">
-                <label>JURADOS ONLINE</label>
+                <div class="jurados-label">JURADOS ONLINE</div>
                 <div class="jurados-icons" id="iconsPainel"></div>
             </div>
         </div>
+
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -79,7 +111,7 @@
         let estado = {};
 
         function getUserSvg(ativo) {
-            const cor = ativo ? "#00cc55" : "#666666";
+            const cor = ativo ? "#00cc55" : "#777777";
             return `<svg class="user-icon" viewBox="0 0 24 24" fill="${cor}"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
         }
 
@@ -94,7 +126,7 @@
             
             const total = Object.keys(estado.jurados || {}).length;
             if(total >= 6) {
-                mostrarTelaVagasLotadas();
+                mostrarVagasLotadas();
                 return;
             }
 
@@ -125,61 +157,79 @@
 
             if (status === 'aguardando') {
                 box.innerHTML = `
-                    <svg class="svg-center" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="#a820d6" stroke-width="4"/>
-                        <circle cx="50" cy="50" r="30" fill="none" stroke="#a820d6" stroke-width="2" stroke-dasharray="4"/>
-                        <circle cx="50" cy="50" r="15" fill="none" stroke="#a820d6" stroke-width="2"/>
-                        <line class="radar-sweep" x1="50" y1="50" x2="50" y2="5" stroke="#a820d6" stroke-width="4"/>
-                    </svg>
-                    <div class="txt-main">AGUARDANDO OUTROS JURADOS</div>
-                    <div class="txt-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+                    <div class="radar-box">
+                        <svg class="radar-svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" fill="none" stroke="#b0b0b0" stroke-width="4"/>
+                            <circle cx="50" cy="50" r="45" fill="#951573"/>
+                            <circle cx="50" cy="50" r="32" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <circle cx="50" cy="50" r="18" fill="none" stroke="#ffffff" stroke-width="2"/>
+                            <line x1="50" y1="5" x2="50" y2="95" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+                            <line x1="5" y1="50" x2="95" y2="50" stroke="#ffffff" stroke-width="1.5" opacity="0.5"/>
+                            <circle cx="68" cy="32" r="3" fill="#ffffff"/>
+                            <circle cx="35" cy="65" r="2.5" fill="#ffffff"/>
+                            <g class="radar-sweep">
+                                <path d="M 50 50 L 50 5 A 45 45 0 0 1 85 20 Z" fill="rgba(255, 255, 255, 0.45)"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="txt-aguardando-title">AGUARDANDO OUTROS JURADOS</div>
+                    <div class="txt-aguardando-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
                 `;
             } else if (status === 'rodando') {
                 if(jaVirei) {
                     box.innerHTML = `
-                        <div class="pill-roxa">CADEIRA VIRADA!</div>
-                        <div class="txt-main" style="color:#00cc55;">VOCÊ VIROU A CADEIRA!</div>
-                        <div class="txt-sub" style="margin-top:10px;">Aguardando o encerramento da apresentação...</div>
+                        <div class="pill-iniciada">CADEIRA VIRADA!</div>
+                        <div class="txt-instrucao" style="color:#00cc55; margin-top:15px;">VOCÊ VIROU A CADEIRA!</div>
+                        <div class="txt-atencao" style="margin-top:10px;">Aguardando o encerramento da apresentação pelo admin...</div>
                     `;
                 } else {
                     box.innerHTML = `
-                        <div class="pill-roxa">RODADA INICIADA</div>
-                        <div class="instrucao-txt">AVALIE O CANTOR E, SE DESEJAR, CLIQUE ABAIXO PARA VIRAR A CADEIRA</div>
-                        <div class="atencao-txt">Atenção: Não é possível "desvirar" a cadeira depois.</div>
-                        <div class="chair-preview-box">
-                            <svg width="50" height="50" viewBox="0 0 100 110"><path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#333"/><path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#222"/><path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111"/></svg>
-                            <span style="font-size:1.5rem; font-weight:900;">➔</span>
-                            <svg width="50" height="50" viewBox="0 0 100 110"><path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#e50914"/><path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#b30000"/><path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111"/></svg>
+                        <div class="pill-iniciada">RODADA INICIADA</div>
+                        <div class="txt-instrucao">AVALIE O CANTOR E, SE DESEJAR, CLIQUE ABAIXO PARA VIRAR A CADEIRA</div>
+                        <div class="txt-atencao">Atenção: Não é possível "desvirar" a cadeira depois.</div>
+                        
+                        <div class="preview-chairs-box">
+                            <img class="chair-prev-img" src="/cadeira-pb.png" alt="Cadeira Desligada">
+                            <svg class="arrow-prev" viewBox="0 0 40 30" fill="none">
+                                <path d="M 5 15 Q 20 2, 30 12" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                                <path d="M 22 5 L 32 13 L 24 21" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <img class="chair-prev-img" src="/cadeira-colorida.png" alt="Cadeira Acesa">
                         </div>
-                        <button class="btn-purple" onclick="virar()">❯ VIRAR A CADEIRA ❯</button>
+
+                        <button class="btn-virar-cadeira" onclick="virar()">
+                            <span class="circle-icon">❯</span>
+                            <span>VIRAR A CADEIRA</span>
+                            <span class="circle-icon">❯</span>
+                        </button>
                     `;
                 }
             } else if (status === 'votacao_encerrada') {
                 if(jaVirei) {
                     box.innerHTML = `
-                        <div class="pill-roxa">VOTAÇÃO ENCERRADA</div>
-                        <div class="txt-main" style="color:#00cc55;">VOCÊ VIROU A CADEIRA PARA ESTE CANTOR!</div>
+                        <div class="pill-iniciada">VOTAÇÃO ENCERRADA</div>
+                        <div class="txt-instrucao" style="color:#00cc55; margin-top:15px;">VOCÊ VIROU A CADEIRA PARA ESTE CANTOR!</div>
                     `;
                 } else {
                     box.innerHTML = `
-                        <div class="pill-roxa">VOTAÇÃO ENCERRADA</div>
-                        <div class="txt-main" style="color:#e50914;">VOCÊ NÃO VIROU A CADEIRA</div>
-                        <div class="txt-sub" style="margin-top:8px;">A votação foi encerrada pelo admin.</div>
+                        <div class="pill-iniciada">VOTAÇÃO ENCERRADA</div>
+                        <div class="txt-instrucao" style="color:#e50914; margin-top:15px;">VOCÊ NÃO VIROU A CADEIRA</div>
+                        <div class="txt-atencao" style="margin-top:8px;">A votação foi finalizada pelo admin.</div>
                     `;
                 }
             }
         }
 
-        function mostrarTelaVagasLotadas() {
+        function mostrarVagasLotadas() {
             document.getElementById('screenLogin').style.display = 'none';
             document.getElementById('screenPainel').style.display = 'block';
             document.getElementById('boxConteudo').innerHTML = `
-                <svg class="svg-center" viewBox="0 0 100 100">
-                    <polygon points="50,10 90,90 10,90" fill="none" stroke="#e50914" stroke-width="6"/>
-                    <text x="50" y="70" fill="#e50914" font-size="45" font-weight="900" text-anchor="middle">!</text>
+                <svg class="alert-svg" viewBox="0 0 100 100">
+                    <polygon points="50,8 92,88 8,88" fill="none" stroke="#951573" stroke-width="7" stroke-linejoin="round"/>
+                    <text x="50" y="73" fill="#951573" font-size="48" font-weight="900" text-anchor="middle">!</text>
                 </svg>
-                <div class="txt-main" style="color:#e50914;">TODAS AS 6 VAGAS DE JURADO ESTÃO OCUPADAS</div>
-                <div class="txt-sub">É NECESSÁRIO AGUARDAR QUE UM DOS JURADOS SAIA DO APP</div>
+                <div class="txt-alert-title">TODAS AS 6 VAGAS DE JURADO ESTÃO OCUPADAS</div>
+                <div class="txt-alert-sub">É NECESSÁRIO AGUARDAR QUE UM DOS JURADOS SAIA DO APP</div>
             `;
         }
 
