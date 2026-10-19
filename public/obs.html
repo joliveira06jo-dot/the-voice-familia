@@ -4,109 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Voice Família - Overlay OBS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: transparent !important; width: 1920px; height: 1080px; overflow: hidden; position: relative; }
+        body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+
+        /* Mensagens de Topo */
+        .header-msg { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
+        .header-msg.ativo { display: block; }
+
+        .title-aguardando { color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,255,255,0.8); }
+        .subtitle-aguardando { color: #cccccc; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; }
+
+        .pill-iniciada { display: inline-block; background: #00cc55; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #00cc55; }
+        .subtitle-iniciada { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 8px #000; }
+
+        .pill-finalizada { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
+        .subtitle-finalizada { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 8px #000; }
+
+        /* Fileira de Cadeiras */
+        .cadeiras-wrapper { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
+        .cadeiras-wrapper.ativo { display: flex; }
+
+        .cadeira-unit { display: flex; flex-direction: column; align-items: center; width: 100px; transition: transform 0.3s ease; }
+        .cadeira-unit.virada { transform: scale(1.15); z-index: 5; }
+
+        .cadeira-svg { width: 90px; height: 100px; filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.7)); }
         
-        /* Faixa de Status no Topo */
-        .status-bar { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.8); border: 2px solid #e50914; padding: 10px 30px; border-radius: 50px; text-align: center; box-shadow: 0 0 20px rgba(229, 9, 20, 0.7); display: flex; flex-direction: column; align-items: center; }
-        .status-bar h2 { color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
-        .status-bar p { color: #ffcc00; font-size: 0.9rem; font-weight: 700; margin-top: 3px; }
-
-        /* Container das Cadeiras no Topo */
-        .cadeiras-container { position: absolute; top: 90px; width: 100%; display: flex; justify-content: center; gap: 20px; padding: 0 50px; }
-        
-        .cadeira-box { display: flex; flex-direction: column; align-items: center; transition: all 0.4s ease; }
-        .cadeira-box.virada { transform: scale(1.15) translateY(-10px); z-index: 10; }
-
-        /* Desenho Estilizado da Cadeira The Voice */
-        .cadeira-img { width: 90px; height: 110px; background: #222; border-radius: 15px 15px 5px 5px; border: 3px solid #555; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); transition: 0.3s; }
-        .cadeira-box.virada .cadeira-img { background: #e50914; border-color: #ffcc00; box-shadow: 0 0 30px #ffcc00, 0 0 50px #e50914; animation: pulsar 1.5s infinite alternate; }
-
-        @keyframes pulsar {
-            0% { box-shadow: 0 0 20px #ffcc00, 0 0 40px #e50914; }
-            100% { box-shadow: 0 0 40px #00ffff, 0 0 60px #ffcc00; }
-        }
-
-        .cadeira-icone { font-size: 2.5rem; filter: grayscale(100%); transition: 0.3s; }
-        .cadeira-box.virada .cadeira-icone { filter: grayscale(0%); transform: scale(1.1); }
-
-        /* Base Luminosa com o Nome do Jurado (Estilo "EU QUERO VOCÊ") */
-        .base-nome { margin-top: -5px; background: #111; border: 2px solid #444; color: #aaa; padding: 4px 12px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cadeira-box.virada .base-nome { background: #ffcc00; color: #000; border-color: #fff; box-shadow: 0 0 15px #ffcc00; }
+        .tag-jurado { margin-top: 4px; background: #000000; border: 1px solid #e50914; color: #ffffff; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 900; text-transform: uppercase; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .cadeira-unit.virada .tag-jurado { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 10px #e50914; }
     </style>
 </head>
 <body>
 
-    <!-- Tarja de Status -->
-    <div class="status-bar" id="statusBar">
-        <h2 id="txtTituloStatus">Aguardando Jurados</h2>
-        <p id="txtSubStatus">É necessário no mínimo dois jurados</p>
+    <!-- Avisos de Status -->
+    <div id="msgAguardando" class="header-msg">
+        <div class="title-aguardando">AGUARDANDO JURADOS</div>
+        <div class="subtitle-aguardando">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
     </div>
 
-    <!-- Cadeiras Dinâmicas -->
-    <div class="cadeiras-container" id="containerCadeiras">
-        <!-- Gerado via JavaScript -->
+    <div id="msgIniciada" class="header-msg">
+        <div class="pill-iniciada">RODADA INICIADA!</div>
+        <div class="subtitle-iniciada">OS JURADOS IRÃO AVALIAR SUA APRESENTAÇÃO!</div>
     </div>
 
-    <!-- Efeito Sonoro The Voice (Simulado via Audio HTML5) -->
-    <audio id="somVirada" src="https://www.myinstants.com/media/sounds/the-voice-button-sound.mp3"></audio>
+    <div id="msgFinalizada" class="header-msg">
+        <div class="pill-finalizada">RODADA FINALIZADA!</div>
+        <div class="subtitle-finalizada">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
+    </div>
+
+    <!-- Cadeiras no Topo -->
+    <div id="cadeirasRow" class="cadeiras-wrapper"></div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
 
-        socket.on('updateState', (state) => {
-            atualizarOverlay(state);
-        });
-
-        socket.on('cadeiraVirou', (socketId) => {
-            const audio = document.getElementById('somVirada');
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log("Áudio bloqueado pelo navegador até haver interação:", e));
-        });
-
-        function atualizarOverlay(state) {
-            const status = state.status;
-            const titulo = document.getElementById('txtTituloStatus');
-            const sub = document.getElementById('txtSubStatus');
-            const boxStatus = document.getElementById('statusBar');
-
-            // Atualiza Tarja de Topo
-            if (status === 'aguardando') {
-                const total = Object.keys(state.jurados).length;
-                titulo.innerText = "Aguardando Jurados";
-                sub.innerText = total < 2 ? "É necessário no mínimo dois jurados" : `Pronto! ${total} jurados conectados.`;
-                boxStatus.style.borderColor = "#e50914";
-            } else if (status === 'rodando') {
-                titulo.innerText = "Rodada Iniciada!";
-                sub.innerText = `${state.cantor} canta "${state.musica}" (${state.artista})`;
-                boxStatus.style.borderColor = "#00cc44";
-            } else if (status === 'finalizado') {
-                titulo.innerText = "Rodada Finalizada!";
-                sub.innerText = "Os jurados já avaliarem sua apresentação.";
-                boxStatus.style.borderColor = "#ffcc00";
-            }
-
-            // Renderiza as Cadeiras dos Jurados
-            const container = document.getElementById('containerCadeiras');
-            const juradosArray = Object.values(state.jurados);
-            
-            let htmlCadeiras = '';
-            juradosArray.forEach(j => {
-                const classeVirada = j.virou ? 'virada' : '';
-                htmlCadeiras += `
-                    <div class="cadeira-box ${classeVirada}">
-                        <div class="cadeira-img">
-                            <span class="cadeira-icone">💺</span>
-                        </div>
-                        <div class="base-nome">${j.nome}</div>
-                    </div>
-                `;
-            });
-            container.innerHTML = htmlCadeiras;
+        function emitirSomVirada() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(580, audioCtx.currentTime + 0.45);
+                
+                gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.5);
+            } catch(e) {}
         }
+
+        socket.on('cadeiraVirou', () => {
+            emitirSomVirada();
+        });
+
+        function getCadeiraSVG(virada) {
+            if (virada) {
+                return `
+                <svg class="cadeira-svg" viewBox="0 0 100 110">
+                    <path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#e50914" stroke="#ffffff" stroke-width="3"/>
+                    <path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#b30000" stroke="#ffffff" stroke-width="2"/>
+                    <path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111111" stroke="#e50914" stroke-width="2"/>
+                    <text x="50" y="93" fill="#ffffff" font-size="7" font-weight="900" text-anchor="middle">EU QUERO VOCÊ</text>
+                </svg>`;
+            } else {
+                return `
+                <svg class="cadeira-svg" viewBox="0 0 100 110">
+                    <path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#333333" stroke="#666666" stroke-width="2"/>
+                    <path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#222222" stroke="#555555" stroke-width="2"/>
+                    <path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111111" stroke="#444444" stroke-width="2"/>
+                    <text x="50" y="93" fill="#777777" font-size="7" font-weight="900" text-anchor="middle">EU QUERO VOCÊ</text>
+                </svg>`;
+            }
+        }
+
+        socket.on('updateState', (state) => {
+            const mAguardando = document.getElementById('msgAguardando');
+            const mIniciada = document.getElementById('msgIniciada');
+            const mFinalizada = document.getElementById('msgFinalizada');
+            const cadeirasRow = document.getElementById('cadeirasRow');
+
+            mAguardando.classList.remove('ativo');
+            mIniciada.classList.remove('ativo');
+            mFinalizada.classList.remove('ativo');
+            cadeirasRow.classList.remove('ativo');
+
+            if (state.status === 'aguardando') {
+                mAguardando.classList.add('ativo');
+            } else if (state.status === 'rodando') {
+                cadeirasRow.classList.add('ativo');
+
+                let html = '';
+                Object.values(state.jurados).forEach(j => {
+                    html += `
+                        <div class="cadeira-unit ${j.virou ? 'virada' : ''}">
+                            ${getCadeiraSVG(j.virou)}
+                            <div class="tag-jurado">${j.nome}</div>
+                        </div>
+                    `;
+                });
+                cadeirasRow.innerHTML = html;
+            } else if (state.status === 'votacao_encerrada' || state.status === 'finalizado') {
+                mFinalizada.classList.add('ativo');
+            }
+        });
     </script>
 </body>
 </html>
