@@ -7,120 +7,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0b0218 url('/fundo-palco.png') no-repeat center center fixed; background-size: cover; color: #ffffff; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { background: #0b0218 url('/fundo-palco.png') no-repeat center center fixed; background-size: cover; color: #000000; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
-        /* Cabeçalho Topo */
-        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 400px; margin-bottom: 12px; }
-        .header-logo { height: 46px; object-fit: contain; }
-        .header-title { color: #ffffff; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
-        .badge-admin { background: #951573; color: #ffffff; padding: 3px 10px; border-radius: 8px; font-size: 1.05rem; font-weight: 900; }
+        /* Cabeçalho Topo (Logo Grande + MÓDULO / ADMIN em 2 linhas) */
+        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 380px; margin-bottom: 15px; padding: 0 5px; }
+        .header-logo { height: 85px; max-width: 160px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
+        
+        .header-title-box { display: flex; flex-direction: column; align-items: flex-end; }
+        .title-modulo { color: #ffffff; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.8); line-height: 1; }
+        .badge-admin { background: #951573; color: #ffffff; padding: 4px 16px; border-radius: 12px; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-top: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.4); line-height: 1; }
 
-        /* Card Principal */
-        .main-card { width: 100%; max-width: 400px; background: rgba(10, 2, 20, 0.88); border: 2px solid #800db0; border-radius: 22px; padding: 20px 18px; box-shadow: 0 0 25px rgba(128, 13, 176, 0.4); backdrop-filter: blur(4px); }
+        /* Card 1: Formulário de Início (Fundo Branco Conforme Protótipo) */
+        .card-form-white { width: 100%; max-width: 380px; background: #ffffff; border-radius: 25px; padding: 22px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        /* Formulário de Início */
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 0.75rem; font-weight: 900; margin-bottom: 5px; color: #ffffff; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 11px; border-radius: 12px; border: 2px solid #ffffff; background: #ffffff; color: #000000; font-size: 0.95rem; font-weight: 900; text-align: center; outline: none; }
+        .form-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.85rem; font-weight: 900; margin-bottom: 5px; color: #000000; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; }
+        input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #000000; background: #ffffff; color: #000000; font-size: 1rem; font-weight: 900; text-align: center; outline: none; }
 
-        .jurados-box { text-align: center; margin: 15px 0 10px 0; }
-        .jurados-label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; color: #ffffff; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .jurados-box { text-align: center; margin: 18px 0 12px 0; }
+        .jurados-label { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; color: #000000; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .jurados-label.white-text { color: #ffffff; }
         .jurados-icons { display: flex; justify-content: center; gap: 6px; }
-        .user-icon { width: 22px; height: 22px; }
+        .user-icon { width: 26px; height: 26px; }
 
-        .btn-iniciar { width: 100%; padding: 14px; border-radius: 12px; font-weight: 900; font-size: 1.05rem; text-transform: uppercase; border: none; transition: 0.2s; margin-top: 10px; }
-        .btn-iniciar:disabled { background: #333333; color: #777777; cursor: not-allowed; border: 2px solid #444444; }
-        .btn-iniciar.active { background: #4c2882; color: #ffffff; border: 2px solid #800db0; cursor: pointer; box-shadow: 0 4px 12px rgba(128, 13, 176, 0.5); }
+        .btn-iniciar { width: 100%; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.15rem; text-transform: uppercase; border: none; transition: 0.2s; margin-top: 10px; }
+        .btn-iniciar:disabled { background: #cccccc; color: #888888; border: 2px solid #aaaaaa; cursor: not-allowed; }
+        .btn-iniciar.active { background: #4c2882; color: #ffffff; cursor: pointer; box-shadow: 0 5px 15px rgba(76, 40, 130, 0.5); }
 
-        /* Card Rodada em Andamento (Idêntico ao Protótipo) */
-        .andamento-box { border: 2px solid #ffffff; border-radius: 20px; padding: 18px 12px; text-align: center; background: rgba(15, 2, 25, 0.6); box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); }
-        .andamento-title { color: #ffffff; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 18px; letter-spacing: 0.5px; }
+        /* Card 2: Rodada em Andamento (Fundo Escuro Transparente com Borda Branca) */
+        .card-andamento-dark { width: 100%; max-width: 380px; background: rgba(10, 2, 20, 0.75); border: 3px solid #ffffff; border-radius: 25px; padding: 22px 16px; text-align: center; backdrop-filter: blur(6px); box-shadow: 0 0 25px rgba(255, 255, 255, 0.25); }
+        .andamento-title { color: #ffffff; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.5px; }
 
-        .timer-container { position: relative; width: 130px; height: 130px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
-        .timer-svg { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        .timer-text { position: relative; z-index: 2; color: #951573; font-size: 1rem; font-weight: 900; text-transform: uppercase; margin-top: 8px; }
+        .timer-container { position: relative; width: 170px; height: 170px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
+        .timer-svg { width: 100%; height: 100%; }
 
-        .buttons-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .btn-encerrar-votacao { width: 100%; background: #4c2882; color: #ffffff; border: 2px solid #800db0; padding: 13px; border-radius: 12px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .btn-finalizar-rodada { width: 100%; background: #ffffff; color: #951573; border: 2px solid #951573; padding: 13px; border-radius: 12px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .buttons-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .btn-encerrar-votacao { width: 100%; background: #4c2882; color: #ffffff; border: 2px solid #6b3ba7; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .btn-finalizar-rodada { width: 100%; background: #ffffff; color: #951573; border: 3px solid #ffffff; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
 
-        /* Histórico de Rodadas (Abaixo da Tela) */
-        .historico-container { width: 100%; max-width: 400px; margin-top: 15px; background: #e0e0e0; border-radius: 20px; padding: 14px; color: #000000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .historico-title { text-align: center; font-size: 0.95rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; color: #000000; }
+        /* Card 3: Histórico de ÚLTIMAS RODADAS (Abaixo do Card Principal) */
+        .historico-container { width: 100%; max-width: 380px; margin-top: 15px; background: #ffffff; border-radius: 22px; padding: 16px; color: #000000; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+        .historico-title { text-align: center; font-size: 1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; color: #000000; }
 
-        .hist-card { background: #ffffff; border-radius: 12px; padding: 10px 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .hist-details { font-size: 0.72rem; font-weight: 900; color: #000000; line-height: 1.35; text-transform: uppercase; }
-        .hist-details span { font-weight: 700; color: #333333; }
+        .hist-card { background: #e8e8e8; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .hist-details { font-size: 0.72rem; font-weight: 900; color: #000000; line-height: 1.4; text-transform: uppercase; }
+        .hist-details span { font-weight: 800; color: #333333; }
         .hist-jurados-icons { display: flex; gap: 3px; align-items: center; }
     </style>
 </head>
 <body>
 
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho Topo -->
     <div class="top-header">
         <img src="/logo-thevoice.png" alt="The Voice Família" class="header-logo">
-        <div class="header-title">MÓDULO <span class="badge-admin">ADMIN</span></div>
+        <div class="header-title-box">
+            <div class="title-modulo">MÓDULO</div>
+            <div class="badge-admin">ADMIN</div>
+        </div>
     </div>
 
-    <!-- Container Principal -->
-    <div class="main-card">
+    <!-- Estado 1: Formulário (Card Branco Conforme Protótipo) -->
+    <div id="viewForm" class="card-form-white">
+        <div class="form-group">
+            <label>NOME DO(S) CANTOR(ES)</label>
+            <input type="text" id="inputCantor">
+        </div>
+        <div class="form-group">
+            <label>ARTISTA</label>
+            <input type="text" id="inputArtista">
+        </div>
+        <div class="form-group">
+            <label>NOME DA MÚSICA</label>
+            <input type="text" id="inputMusica">
+        </div>
+
+        <div class="jurados-box">
+            <div class="jurados-label">JURADOS ONLINE</div>
+            <div class="jurados-icons" id="iconsForm"></div>
+        </div>
+
+        <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">INICIAR RODADA</button>
+    </div>
+
+    <!-- Estado 2: Rodada em Andamento (Card Escuro com Borda Branca) -->
+    <div id="viewAndamento" class="card-andamento-dark" style="display:none;">
+        <div class="andamento-title">RODADA EM ANDAMENTO</div>
         
-        <!-- Estado 1: Formulário de Pré-Rodada -->
-        <div id="viewForm">
-            <div class="form-group">
-                <label>NOME DO(S) CANTOR(ES)</label>
-                <input type="text" id="inputCantor">
-            </div>
-            <div class="form-group">
-                <label>ARTISTA</label>
-                <input type="text" id="inputArtista">
-            </div>
-            <div class="form-group">
-                <label>NOME DA MÚSICA</label>
-                <input type="text" id="inputMusica">
-            </div>
-
-            <div class="jurados-box">
-                <div class="jurados-label">JURADOS ONLINE</div>
-                <div class="jurados-icons" id="iconsForm"></div>
-            </div>
-
-            <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">INICIAR RODADA</button>
+        <div class="timer-container">
+            <svg class="timer-svg" viewBox="0 0 100 100">
+                <!-- Alças do Relógio de Repetidor -->
+                <path d="M 28,15 L 18,5 M 72,15 L 82,5 M 42,5 L 58,5" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                <!-- Corpo Externo do Relógio -->
+                <circle cx="50" cy="55" r="40" fill="none" stroke="#ffffff" stroke-width="5"/>
+                <!-- Círculo Branco Interno Bem Largo -->
+                <circle cx="50" cy="55" r="32" fill="#ffffff"/>
+                <!-- Texto AGUARDE Centralizado sem Vazar -->
+                <text x="50" y="58" fill="#951573" font-size="11" font-weight="900" text-anchor="middle" dominant-baseline="middle">AGUARDE</text>
+            </svg>
         </div>
 
-        <!-- Estado 2: Rodada em Andamento -->
-        <div id="viewAndamento" style="display:none;">
-            <div class="andamento-box">
-                <div class="andamento-title">RODADA EM ANDAMENTO</div>
-                
-                <div class="timer-container">
-                    <svg class="timer-svg" viewBox="0 0 100 100">
-                        <path d="M 30,12 L 20,5 M 70,12 L 80,5 M 40,5 L 60,5" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-                        <circle cx="50" cy="55" r="38" fill="none" stroke="#ffffff" stroke-width="4"/>
-                        <circle cx="50" cy="55" r="28" fill="#ffffff"/>
-                    </svg>
-                    <div class="timer-text">AGUARDE</div>
-                </div>
-
-                <div class="jurados-box">
-                    <div class="jurados-label">JURADOS ONLINE</div>
-                    <div class="jurados-icons" id="iconsAndamento"></div>
-                </div>
-
-                <div class="buttons-stack">
-                    <button class="btn-encerrar-votacao" onclick="encerrarVotacao()">ENCERRAR VOTAÇÃO</button>
-                    <button class="btn-finalizar-rodada" onclick="finalizarRodada()">FINALIZAR RODADA</button>
-                </div>
-            </div>
+        <div class="jurados-box">
+            <div class="jurados-label white-text">JURADOS ONLINE</div>
+            <div class="jurados-icons" id="iconsAndamento"></div>
         </div>
 
+        <div class="buttons-stack">
+            <button class="btn-encerrar-votacao" onclick="encerrarVotacao()">ENCERRAR VOTAÇÃO</button>
+            <button class="btn-finalizar-rodada" onclick="finalizarRodada()">FINALIZAR RODADA</button>
+        </div>
     </div>
 
-    <!-- Bloco de Últimas Rodadas -->
+    <!-- Bloco ÚLTIMAS RODADAS -->
     <div class="historico-container">
         <div class="historico-title">ÚLTIMAS RODADAS</div>
         <div id="listaHistorico">
-            <div style="text-align:center; font-size:0.75rem; font-weight:700; color:#666;">Nenhuma rodada realizada ainda.</div>
+            <div style="text-align:center; font-size:0.75rem; font-weight:700; color:#666666;">Nenhuma rodada realizada ainda.</div>
         </div>
     </div>
 
@@ -130,7 +131,7 @@
         let estado = {};
 
         function getUserSvg(ativo) {
-            const cor = ativo ? "#00cc55" : "#666666";
+            const cor = ativo ? "#00cc55" : "#777777";
             return `<svg class="user-icon" viewBox="0 0 24 24" fill="${cor}"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
         }
 
@@ -181,7 +182,7 @@
                                 NOME DO(S) CANTOR(ES): <span>${h.cantor}</span><br>
                                 ARTISTA: <span>${h.artista}</span><br>
                                 MÚSICA: <span>${h.musica}</span><br>
-                                <span style="font-size:0.65rem; color:#888888;">${h.dataHora}</span>
+                                <span style="font-size:0.65rem; color:#666666;">${h.dataHora}</span>
                             </div>
                             <div class="hist-jurados-icons">${iconsList}</div>
                         </div>
