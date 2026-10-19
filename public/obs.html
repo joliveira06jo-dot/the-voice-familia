@@ -42,10 +42,10 @@
         
         .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
 
-        #audioNotice { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; pointer-events: none; }
+        #audioNotice { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.85); color: #ffffff; padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; pointer-events: none; border: 2px solid #e50914; text-transform: uppercase; box-shadow: 0 0 10px rgba(229, 9, 20, 0.6); }
     </style>
 </head>
-<body onclick="destravarAudio()">
+<body>
 
     <div id="stAguardando" class="status-container">
         <div class="txt-aguardando-1">AGUARDANDO JURADOS</div>
@@ -63,32 +63,38 @@
     </div>
 
     <div id="cadeirasRow" class="cadeiras-container"></div>
-    <div id="audioNotice">Clique na tela para ativar som</div>
+    <div id="audioNotice">Clique na tela uma vez para ativar o som</div>
 
     <audio id="audioVirada" src="/som-virada.mp3" preload="auto"></audio>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        const audio = document.getElementById('audioVirada');
-        let audioLiberado = false;
+        const audioElem = document.getElementById('audioVirada');
+        let audioUnlocked = false;
 
-        function destravarAudio() {
-            if (audio) {
-                audio.play().then(() => {
-                    audio.pause();
-                    audio.currentTime = 0;
-                    audioLiberado = true;
-                    document.getElementById('audioNotice').style.display = 'none';
-                }).catch(e => console.log('Erro ao destravar:', e));
+        function unlockAudio() {
+            if (!audioUnlocked && audioElem) {
+                audioElem.play().then(() => {
+                    audioElem.pause();
+                    audioElem.currentTime = 0;
+                    audioUnlocked = true;
+                    const notice = document.getElementById('audioNotice');
+                    if (notice) notice.style.display = 'none';
+                }).catch(err => {
+                    console.log('Aguardando clique para liberar áudio:', err);
+                });
             }
         }
 
+        document.addEventListener('click', unlockAudio);
+        document.addEventListener('touchstart', unlockAudio);
+
         socket.on('cadeiraVirou', () => {
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play().catch(e => {
-                    console.log('Bloqueado pelo navegador. Clique na página do OBS uma vez para destravar o som.', e);
+            if (audioElem) {
+                audioElem.currentTime = 0;
+                audioElem.play().catch(e => {
+                    console.log('Autoplay bloqueado pelo navegador. Clique na tela para liberar o som.', e);
                 });
             }
         });
