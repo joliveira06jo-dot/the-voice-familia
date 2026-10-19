@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Voice Família - Sala do Jurado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .card { width: 100%; max-width: 400px; background: rgba(15, 5, 25, 0.95); border: 2px solid #e50914; border-radius: 20px; padding: 25px; box-shadow: 0 0 25px rgba(229, 9, 20, 0.6); text-align: center; }
+        h1 { color: #ffcc00; font-size: 1.3rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
+        input { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #fff; color: #000; font-size: 1rem; font-weight: 700; outline: none; margin-bottom: 15px; text-align: center; }
+        button { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn-entrar { background: #e50914; color: #fff; }
+        .btn-virar { background: linear-gradient(135deg, #ff0055, #ffcc00); color: #fff; font-size: 1.3rem; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(255,204,0,0.5); margin-top: 15px; }
+        .btn-virar:disabled { background: #444; color: #888; box-shadow: none; cursor: not-allowed; }
+        .status-box { font-size: 0.9rem; color: #ff88cc; margin-top: 15px; line-height: 1.4; }
+        .radar { width: 80px; height: 80px; border: 3px dashed #e50914; border-radius: 50%; margin: 20px auto; animation: girar 3s linear infinite; }
+        @keyframes girar { 100% { transform: rotate(360deg); } }
+        .aviso-limite { color: #ff3333; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="telaLogin">
+        <h1>Entrar como Jurado</h1>
+        <input type="text" id="inputNome" placeholder="Digite seu Nome" maxlength="15">
+        <button class="btn-entrar" onclick="entrarComoJurado()">Entrar na Bancada</button>
+        <p class="status-box" id="msgStatusConexao">Aguardando conexão...</p>
+    </div>
+
+    <div class="card" id="telaPainel" style="display:none;">
+        <h1 id="tituloOla">Olá, JURADO</h1>
+        <div id="conteudoDinamico">
+            <!-- Conteúdo muda conforme o status do jogo -->
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let meuNome = '';
+        let estadoGlobal = {};
+
+        socket.on('updateState', (state) => {
+            estadoGlobal = state;
+            atualizarInterfaceJurado();
+        });
+
+        function entrarComoJurado() {
+            const nome = document.getElementById('inputNome').value.trim();
+            if (!nome) {
+                alert('Por favor, digite seu nome!');
+                return;
+            }
+
+            const totalJurados = Object.keys(estadoGlobal.jurados || {}).length;
+            if (totalJurados >= 6) {
+                alert('Ops! O limite máximo de 6 jurados já foi atingido nesta sessão.');
+                return;
+            }
+
+            meuNome = nome;
+            socket.emit('registrarJurado', nome);
+
+            document.getElementById('telaLogin').style.display = 'none';
+            document.getElementById('telaPainel').style.display = 'block';
+            document.getElementById('tituloOla').innerText = `OLÁ, ${meuNome.toUpperCase()}`;
+        }
+
+        function atualizarInterfaceJurado() {
+            if (!meuNome) return; // Se ainda não fez login na tela, não faz nada
+
+            const container = document.getElementById('conteudoDinamico');
+            const status = estadoGlobal.status;
+            
+            // Verifica se meu socket ainda está na lista de jurados
+            const meuId = socket.id;
+            const meuDado = estadoGlobal.jurados[meuId];
+
+            if (status === 'aguardando') {
+                container.innerHTML = `
+                    <div class="radar"></div>
+                    <p class="status-box">AGUARDANDO O INÍCIO<br><small>O admin liberará a rodada em instantes.</small></p>
+                `;
+            } else if (status === 'rodando') {
+                const jaVirei = meuDado ? meuDado.virou : false;
+                
+                if (jaVirei) {
+                    container.innerHTML = `
+                        <div style="font-size: 3rem; margin: 15px 0;">🚨</div>
+                        <p style="color: #00ff66; font-weight: bold; font-size: 1.1rem; text-transform: uppercase;">Cadeira Virada com Sucesso!</p>
+                        <p class="status-box">Aguardando o fim da apresentação...</p>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <p class="status-box" style="margin-bottom: 10px;">RODADA INICIADA!<br>Avalie o cantor e, se desejar, vire a cadeira.</p>
+                        <button class="btn-virar" onclick="virarCadeira()">🔴 VIRAR A CADEIRA</button>
+                        <p style="font-size: 0.75rem; color: #888; margin-top: 10px;">Atenção: Não é possível "desvirar" depois.</p>
+                    `;
+                }
+            } else if (status === 'finalizado') {
+                container.innerHTML = `
+                    <div class="radar"></div>
+                    <p class="status-box">RODADA FINALIZADA!<br><small>Aguardando nova música...</small></p>
+                `;
+            }
+        }
+
+        function virarCadeira() {
+            socket.emit('virarCadeira');
+        }
+    </script>
+</body>
+</html>
