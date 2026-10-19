@@ -3,37 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Voice Família - Sala do Jurado</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>The Voice Família - Módulo Jurado</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .card { width: 100%; max-width: 400px; background: rgba(15, 5, 25, 0.95); border: 2px solid #e50914; border-radius: 20px; padding: 25px; box-shadow: 0 0 25px rgba(229, 9, 20, 0.6); text-align: center; }
-        h1 { color: #ffcc00; font-size: 1.3rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        input { width: 100%; padding: 15px; border-radius: 10px; border: none; background: #fff; color: #000; font-size: 1rem; font-weight: 700; outline: none; margin-bottom: 15px; text-align: center; }
-        button { width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: 900; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .btn-entrar { background: #e50914; color: #fff; }
-        .btn-virar { background: linear-gradient(135deg, #ff0055, #ffcc00); color: #fff; font-size: 1.3rem; padding: 20px; border-radius: 15px; box-shadow: 0 0 20px rgba(255,204,0,0.5); margin-top: 15px; }
-        .btn-virar:disabled { background: #444; color: #888; box-shadow: none; cursor: not-allowed; }
-        .status-box { font-size: 0.9rem; color: #ff88cc; margin-top: 15px; line-height: 1.4; }
-        .radar { width: 80px; height: 80px; border: 3px dashed #e50914; border-radius: 50%; margin: 20px auto; animation: girar 3s linear infinite; }
-        @keyframes girar { 100% { transform: rotate(360deg); } }
-        .aviso-limite { color: #ff3333; font-weight: bold; font-size: 0.9rem; margin-top: 10px; }
+        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; align-items: center; }
+        .card-jurado { width: 100%; max-width: 380px; background: rgba(10, 2, 20, 0.95); border: 2px solid #800db0; border-radius: 25px; padding: 20px; box-shadow: 0 0 20px rgba(128, 13, 176, 0.5); text-align: center; }
+        
+        .header-title { font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+        .header-title span { color: #800db0; background: #fff; padding: 2px 8px; border-radius: 8px; margin-left: 5px; }
+
+        .ola-nome { color: #a820d6; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 15px; }
+
+        .inner-box { background: #ffffff; border-radius: 20px; padding: 20px; color: #000; margin-bottom: 15px; }
+        .inner-box label { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 8px; color: #000; }
+        .inner-box input { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #000; font-weight: 900; text-align: center; font-size: 1rem; outline: none; margin-bottom: 15px; }
+
+        .btn-purple { width: 100%; background: #a820d6; color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 900; font-size: 1rem; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+
+        .jurados-footer { margin-top: 15px; }
+        .jurados-footer label { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; display: block; margin-bottom: 5px; color: #fff; }
+        .jurados-icons { display: flex; justify-content: center; gap: 6px; }
+        .user-icon { width: 20px; height: 20px; }
+
+        /* SVG Radar & Alert */
+        .svg-center { width: 110px; height: 110px; margin: 10px auto; display: block; }
+        .radar-sweep { transform-origin: center; animation: spin 2.5s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .txt-main { font-size: 1.1rem; font-weight: 900; color: #a820d6; text-transform: uppercase; margin-top: 10px; }
+        .txt-sub { font-size: 0.75rem; font-weight: 900; color: #666; text-transform: uppercase; margin-top: 4px; }
+
+        .pill-roxa { background: #a820d6; color: #fff; font-weight: 900; padding: 8px; border-radius: 8px; text-transform: uppercase; font-size: 0.9rem; margin-bottom: 10px; }
+        .instrucao-txt { font-size: 0.8rem; font-weight: 900; color: #a820d6; text-transform: uppercase; margin-bottom: 8px; line-height: 1.2; }
+        .atencao-txt { font-size: 0.65rem; color: #666; font-weight: 700; margin-bottom: 15px; }
+
+        .chair-preview-box { background: #dcdcdc; border-radius: 15px; padding: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
-    <div class="card" id="telaLogin">
-        <h1>Entrar como Jurado</h1>
-        <input type="text" id="inputNome" placeholder="Digite seu Nome" maxlength="15">
-        <button class="btn-entrar" onclick="entrarComoJurado()">Entrar na Bancada</button>
-        <p class="status-box" id="msgStatusConexao">Aguardando conexão...</p>
-    </div>
+    <div class="card-jurado">
+        <div class="header-title">MÓDULO <span>JURADO</span></div>
 
-    <div class="card" id="telaPainel" style="display:none;">
-        <h1 id="tituloOla">Olá, JURADO</h1>
-        <div id="conteudoDinamico">
-            <!-- Conteúdo muda conforme o status do jogo -->
+        <!-- Tela 1: Login -->
+        <div id="screenLogin">
+            <div class="inner-box">
+                <label>INSIRA O SEU NOME</label>
+                <input type="text" id="inputNome" maxlength="15">
+                <button class="btn-purple" onclick="entrar()">ENTRAR COMO JURADO ❯❯</button>
+            </div>
+            <div class="jurados-footer">
+                <label>JURADOS ONLINE</label>
+                <div class="jurados-icons" id="iconsLogin"></div>
+            </div>
+        </div>
+
+        <!-- Tela 2: Painel Principal -->
+        <div id="screenPainel" style="display:none;">
+            <div class="ola-nome" id="txtOla">OLÁ, JURADO</div>
+
+            <div class="inner-box" id="boxConteudo"></div>
+
+            <div class="jurados-footer">
+                <label>JURADOS ONLINE</label>
+                <div class="jurados-icons" id="iconsPainel"></div>
+            </div>
         </div>
     </div>
 
@@ -41,74 +76,114 @@
     <script>
         const socket = io();
         let meuNome = '';
-        let estadoGlobal = {};
+        let estado = {};
+
+        function getUserSvg(ativo) {
+            const cor = ativo ? "#00cc55" : "#666666";
+            return `<svg class="user-icon" viewBox="0 0 24 24" fill="${cor}"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+        }
 
         socket.on('updateState', (state) => {
-            estadoGlobal = state;
-            atualizarInterfaceJurado();
+            estado = state;
+            atualizarInterface();
         });
 
-        function entrarComoJurado() {
+        function entrar() {
             const nome = document.getElementById('inputNome').value.trim();
-            if (!nome) {
-                alert('Por favor, digite seu nome!');
-                return;
-            }
-
-            const totalJurados = Object.keys(estadoGlobal.jurados || {}).length;
-            if (totalJurados >= 6) {
-                alert('Ops! O limite máximo de 6 jurados já foi atingido nesta sessão.');
+            if(!nome) return alert('Por favor, insira o seu nome!');
+            
+            const total = Object.keys(estado.jurados || {}).length;
+            if(total >= 6) {
+                mostrarTelaVagasLotadas();
                 return;
             }
 
             meuNome = nome;
             socket.emit('registrarJurado', nome);
 
-            document.getElementById('telaLogin').style.display = 'none';
-            document.getElementById('telaPainel').style.display = 'block';
-            document.getElementById('tituloOla').innerText = `OLÁ, ${meuNome.toUpperCase()}`;
+            document.getElementById('screenLogin').style.display = 'none';
+            document.getElementById('screenPainel').style.display = 'block';
+            document.getElementById('txtOla').innerText = `OLÁ, ${meuNome.toUpperCase()}`;
+            atualizarInterface();
         }
 
-        function atualizarInterfaceJurado() {
-            if (!meuNome) return; // Se ainda não fez login na tela, não faz nada
+        function atualizarInterface() {
+            const total = Object.keys(estado.jurados || {}).length;
 
-            const container = document.getElementById('conteudoDinamico');
-            const status = estadoGlobal.status;
-            
-            // Verifica se meu socket ainda está na lista de jurados
-            const meuId = socket.id;
-            const meuDado = estadoGlobal.jurados[meuId];
+            let iconsHtml = '';
+            for(let i=0; i<6; i++) iconsHtml += getUserSvg(i < total);
+            document.getElementById('iconsLogin').innerHTML = iconsHtml;
+            document.getElementById('iconsPainel').innerHTML = iconsHtml;
+
+            if(!meuNome) return;
+
+            const box = document.getElementById('boxConteudo');
+            const status = estado.status;
+            const meuSocket = socket.id;
+            const meuDado = estado.jurados[meuSocket];
+            const jaVirei = meuDado ? meuDado.virou : false;
 
             if (status === 'aguardando') {
-                container.innerHTML = `
-                    <div class="radar"></div>
-                    <p class="status-box">AGUARDANDO O INÍCIO<br><small>O admin liberará a rodada em instantes.</small></p>
+                box.innerHTML = `
+                    <svg class="svg-center" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="#a820d6" stroke-width="4"/>
+                        <circle cx="50" cy="50" r="30" fill="none" stroke="#a820d6" stroke-width="2" stroke-dasharray="4"/>
+                        <circle cx="50" cy="50" r="15" fill="none" stroke="#a820d6" stroke-width="2"/>
+                        <line class="radar-sweep" x1="50" y1="50" x2="50" y2="5" stroke="#a820d6" stroke-width="4"/>
+                    </svg>
+                    <div class="txt-main">AGUARDANDO OUTROS JURADOS</div>
+                    <div class="txt-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
                 `;
             } else if (status === 'rodando') {
-                const jaVirei = meuDado ? meuDado.virou : false;
-                
-                if (jaVirei) {
-                    container.innerHTML = `
-                        <div style="font-size: 3rem; margin: 15px 0;">🚨</div>
-                        <p style="color: #00ff66; font-weight: bold; font-size: 1.1rem; text-transform: uppercase;">Cadeira Virada com Sucesso!</p>
-                        <p class="status-box">Aguardando o fim da apresentação...</p>
+                if(jaVirei) {
+                    box.innerHTML = `
+                        <div class="pill-roxa">CADEIRA VIRADA!</div>
+                        <div class="txt-main" style="color:#00cc55;">VOCÊ VIROU A CADEIRA!</div>
+                        <div class="txt-sub" style="margin-top:10px;">Aguardando o encerramento da apresentação...</div>
                     `;
                 } else {
-                    container.innerHTML = `
-                        <p class="status-box" style="margin-bottom: 10px;">RODADA INICIADA!<br>Avalie o cantor e, se desejar, vire a cadeira.</p>
-                        <button class="btn-virar" onclick="virarCadeira()">🔴 VIRAR A CADEIRA</button>
-                        <p style="font-size: 0.75rem; color: #888; margin-top: 10px;">Atenção: Não é possível "desvirar" depois.</p>
+                    box.innerHTML = `
+                        <div class="pill-roxa">RODADA INICIADA</div>
+                        <div class="instrucao-txt">AVALIE O CANTOR E, SE DESEJAR, CLIQUE ABAIXO PARA VIRAR A CADEIRA</div>
+                        <div class="atencao-txt">Atenção: Não é possível "desvirar" a cadeira depois.</div>
+                        <div class="chair-preview-box">
+                            <svg width="50" height="50" viewBox="0 0 100 110"><path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#333"/><path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#222"/><path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111"/></svg>
+                            <span style="font-size:1.5rem; font-weight:900;">➔</span>
+                            <svg width="50" height="50" viewBox="0 0 100 110"><path d="M20,10 L80,10 L75,60 L25,60 Z" fill="#e50914"/><path d="M15,60 L85,60 L85,75 L15,75 Z" fill="#b30000"/><path d="M30,75 L70,75 L80,100 L20,100 Z" fill="#111"/></svg>
+                        </div>
+                        <button class="btn-purple" onclick="virar()">❯ VIRAR A CADEIRA ❯</button>
                     `;
                 }
-            } else if (status === 'finalizado') {
-                container.innerHTML = `
-                    <div class="radar"></div>
-                    <p class="status-box">RODADA FINALIZADA!<br><small>Aguardando nova música...</small></p>
-                `;
+            } else if (status === 'votacao_encerrada') {
+                if(jaVirei) {
+                    box.innerHTML = `
+                        <div class="pill-roxa">VOTAÇÃO ENCERRADA</div>
+                        <div class="txt-main" style="color:#00cc55;">VOCÊ VIROU A CADEIRA PARA ESTE CANTOR!</div>
+                    `;
+                } else {
+                    box.innerHTML = `
+                        <div class="pill-roxa">VOTAÇÃO ENCERRADA</div>
+                        <div class="txt-main" style="color:#e50914;">VOCÊ NÃO VIROU A CADEIRA</div>
+                        <div class="txt-sub" style="margin-top:8px;">A votação foi encerrada pelo admin.</div>
+                    `;
+                }
             }
         }
 
-        function virarCadeira() {
+        function mostrarTelaVagasLotadas() {
+            document.getElementById('screenLogin').style.display = 'none';
+            document.getElementById('screenPainel').style.display = 'block';
+            document.getElementById('boxConteudo').innerHTML = `
+                <svg class="svg-center" viewBox="0 0 100 100">
+                    <polygon points="50,10 90,90 10,90" fill="none" stroke="#e50914" stroke-width="6"/>
+                    <text x="50" y="70" fill="#e50914" font-size="45" font-weight="900" text-anchor="middle">!</text>
+                </svg>
+                <div class="txt-main" style="color:#e50914;">TODAS AS 6 VAGAS DE JURADO ESTÃO OCUPADAS</div>
+                <div class="txt-sub">É NECESSÁRIO AGUARDAR QUE UM DOS JURADOS SAIA DO APP</div>
+            `;
+        }
+
+        function virar() {
             socket.emit('virarCadeira');
         }
     </script>
