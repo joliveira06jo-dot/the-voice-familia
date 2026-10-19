@@ -7,36 +7,35 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0b0218 url('/fundo-palco.png') no-repeat center center fixed; background-size: cover; color: #000000; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        body { background: #0b0218 url('/fundo-palco.png') no-repeat center center fixed; background-size: cover; color: #ffffff; min-height: 100vh; padding: 15px; display: flex; flex-direction: column; align-items: center; }
 
-        /* Cabeçalho Topo (Logo Grande + MÓDULO / ADMIN em 2 linhas) */
-        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 380px; margin-bottom: 15px; padding: 0 5px; }
-        .header-logo { height: 85px; max-width: 160px; object-fit: contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
+        /* Topo: Logo Ampliado + MÓDULO / ADMIN em 2 linhas */
+        .top-header { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 400px; margin-bottom: 15px; padding: 0 5px; }
+        .header-logo { height: 110px; max-width: 190px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8)); }
         
         .header-title-box { display: flex; flex-direction: column; align-items: flex-end; }
         .title-modulo { color: #ffffff; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 2px 6px rgba(0,0,0,0.8); line-height: 1; }
         .badge-admin { background: #951573; color: #ffffff; padding: 4px 16px; border-radius: 12px; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; margin-top: 4px; box-shadow: 0 3px 10px rgba(0,0,0,0.4); line-height: 1; }
 
-        /* Card 1: Formulário de Início (Fundo Branco Conforme Protótipo) */
-        .card-form-white { width: 100%; max-width: 380px; background: #ffffff; border-radius: 25px; padding: 22px 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Card 1: Formulário de Início (Fundo Escuro 50% Transparente) */
+        .card-form-dark { width: 100%; max-width: 400px; background: rgba(10, 2, 20, 0.5); border: 2px solid #800db0; border-radius: 25px; padding: 22px 18px; box-shadow: 0 0 30px rgba(128, 13, 176, 0.4); backdrop-filter: blur(8px); }
 
         .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 0.85rem; font-weight: 900; margin-bottom: 5px; color: #000000; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; }
-        input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #000000; background: #ffffff; color: #000000; font-size: 1rem; font-weight: 900; text-align: center; outline: none; }
+        label { display: block; font-size: 0.85rem; font-weight: 900; margin-bottom: 6px; color: #ffffff; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+        input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffffff; background: #ffffff; color: #000000; font-size: 1rem; font-weight: 900; text-align: center; outline: none; }
 
         .jurados-box { text-align: center; margin: 18px 0 12px 0; }
-        .jurados-label { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; color: #000000; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .jurados-label.white-text { color: #ffffff; }
-        .jurados-icons { display: flex; justify-content: center; gap: 6px; }
-        .user-icon { width: 26px; height: 26px; }
+        .jurados-label { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; color: #ffffff; margin-bottom: 8px; letter-spacing: 0.5px; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+        .jurados-icons { display: flex; justify-content: center; gap: 8px; }
+        .user-icon { width: 38px; height: 38px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
 
-        .btn-iniciar { width: 100%; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.15rem; text-transform: uppercase; border: none; transition: 0.2s; margin-top: 10px; }
-        .btn-iniciar:disabled { background: #cccccc; color: #888888; border: 2px solid #aaaaaa; cursor: not-allowed; }
-        .btn-iniciar.active { background: #4c2882; color: #ffffff; cursor: pointer; box-shadow: 0 5px 15px rgba(76, 40, 130, 0.5); }
+        .btn-iniciar { width: 100%; padding: 16px; border-radius: 14px; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; border: none; transition: 0.2s; margin-top: 10px; }
+        .btn-iniciar:disabled { background: #2a2233; color: #666666; border: 2px solid #3d3047; cursor: not-allowed; }
+        .btn-iniciar.active { background: #4c2882; color: #ffffff; border: 2px solid #800db0; cursor: pointer; box-shadow: 0 5px 15px rgba(128, 13, 176, 0.6); }
 
-        /* Card 2: Rodada em Andamento (Fundo Escuro Transparente com Borda Branca) */
-        .card-andamento-dark { width: 100%; max-width: 380px; background: rgba(10, 2, 20, 0.75); border: 3px solid #ffffff; border-radius: 25px; padding: 22px 16px; text-align: center; backdrop-filter: blur(6px); box-shadow: 0 0 25px rgba(255, 255, 255, 0.25); }
-        .andamento-title { color: #ffffff; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.5px; }
+        /* Card 2: Rodada em Andamento */
+        .card-andamento-dark { width: 100%; max-width: 400px; background: rgba(10, 2, 20, 0.5); border: 3px solid #ffffff; border-radius: 25px; padding: 22px 16px; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(255, 255, 255, 0.25); }
+        .andamento-title { color: #ffffff; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
 
         .timer-container { position: relative; width: 170px; height: 170px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
         .timer-svg { width: 100%; height: 100%; }
@@ -45,8 +44,8 @@
         .btn-encerrar-votacao { width: 100%; background: #4c2882; color: #ffffff; border: 2px solid #6b3ba7; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
         .btn-finalizar-rodada { width: 100%; background: #ffffff; color: #951573; border: 3px solid #ffffff; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
 
-        /* Card 3: Histórico de ÚLTIMAS RODADAS (Abaixo do Card Principal) */
-        .historico-container { width: 100%; max-width: 380px; margin-top: 15px; background: #ffffff; border-radius: 22px; padding: 16px; color: #000000; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
+        /* Card 3: ÚLTIMAS RODADAS (Expansível para baixo) */
+        .historico-container { width: 100%; max-width: 400px; margin-top: 15px; background: rgba(255, 255, 255, 0.95); border-radius: 22px; padding: 16px; color: #000000; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
         .historico-title { text-align: center; font-size: 1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; color: #000000; }
 
         .hist-card { background: #e8e8e8; border-radius: 14px; padding: 10px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
@@ -66,8 +65,8 @@
         </div>
     </div>
 
-    <!-- Estado 1: Formulário (Card Branco Conforme Protótipo) -->
-    <div id="viewForm" class="card-form-white">
+    <!-- Estado 1: Formulário (Fundo Escuro 50% Transparente) -->
+    <div id="viewForm" class="card-form-dark">
         <div class="form-group">
             <label>NOME DO(S) CANTOR(ES)</label>
             <input type="text" id="inputCantor">
@@ -89,25 +88,21 @@
         <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">INICIAR RODADA</button>
     </div>
 
-    <!-- Estado 2: Rodada em Andamento (Card Escuro com Borda Branca) -->
+    <!-- Estado 2: Rodada em Andamento -->
     <div id="viewAndamento" class="card-andamento-dark" style="display:none;">
         <div class="andamento-title">RODADA EM ANDAMENTO</div>
         
         <div class="timer-container">
             <svg class="timer-svg" viewBox="0 0 100 100">
-                <!-- Alças do Relógio de Repetidor -->
                 <path d="M 28,15 L 18,5 M 72,15 L 82,5 M 42,5 L 58,5" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
-                <!-- Corpo Externo do Relógio -->
                 <circle cx="50" cy="55" r="40" fill="none" stroke="#ffffff" stroke-width="5"/>
-                <!-- Círculo Branco Interno Bem Largo -->
                 <circle cx="50" cy="55" r="32" fill="#ffffff"/>
-                <!-- Texto AGUARDE Centralizado sem Vazar -->
                 <text x="50" y="58" fill="#951573" font-size="11" font-weight="900" text-anchor="middle" dominant-baseline="middle">AGUARDE</text>
             </svg>
         </div>
 
         <div class="jurados-box">
-            <div class="jurados-label white-text">JURADOS ONLINE</div>
+            <div class="jurados-label">JURADOS ONLINE</div>
             <div class="jurados-icons" id="iconsAndamento"></div>
         </div>
 
@@ -131,7 +126,7 @@
         let estado = {};
 
         function getUserSvg(ativo) {
-            const cor = ativo ? "#00cc55" : "#777777";
+            const cor = ativo ? "#00cc55" : "#666666";
             return `<svg class="user-icon" viewBox="0 0 24 24" fill="${cor}"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
         }
 
