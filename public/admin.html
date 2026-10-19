@@ -4,132 +4,145 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Voice Família - Módulo Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; padding: 20px; }
-        .container { max-width: 500px; margin: 0 auto; background: rgba(15, 5, 25, 0.9); border: 2px solid #e50914; border-radius: 15px; padding: 20px; box-shadow: 0 0 20px rgba(229, 9, 20, 0.5); }
-        h1 { text-align: center; color: #ffcc00; font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 5px; color: #ff88cc; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; border-radius: 8px; border: none; background: #fff; color: #000; font-size: 1rem; font-weight: 700; outline: none; }
-        .jurados-status { text-align: center; margin: 20px 0; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; }
-        .jurados-icons { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
-        .dot { width: 15px; height: 15px; border-radius: 50%; background: #666; display: inline-block; }
-        .dot.active { background: #00ff66; box-shadow: 0 0 10px #00ff66; }
-        button { width: 100%; padding: 15px; border: none; border-radius: 8px; font-weight: 900; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
-        .btn-iniciar { background: #00cc44; color: #fff; }
-        .btn-iniciar:disabled { background: #444; color: #888; cursor: not-allowed; }
-        .btn-finalizar { background: #e50914; color: #fff; margin-top: 10px; }
-        .historico-box { margin-top: 30px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; max-height: 250px; overflow-y: auto; }
-        .historico-box h3 { font-size: 1rem; margin-bottom: 10px; color: #ffcc00; border-bottom: 1px solid #444; padding-bottom: 5px; }
-        .historico-item { font-size: 0.8rem; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 5px; margin-bottom: 8px; }
+        body { background: #0b0218 url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1000') no-repeat center center fixed; background-size: cover; color: #fff; min-height: 100vh; padding: 15px; display: flex; justify-content: center; }
+        .app-card { width: 100%; max-width: 410px; background: rgba(10, 2, 20, 0.92); border: 2px solid #800db0; border-radius: 25px; padding: 20px; box-shadow: 0 0 20px rgba(128, 13, 176, 0.5); }
+        .header-title { text-align: center; font-size: 1.3rem; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+        .header-title span { color: #800db0; background: #fff; padding: 2px 8px; border-radius: 8px; margin-left: 5px; }
+        
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 0.75rem; font-weight: 900; margin-bottom: 4px; color: #ffffff; text-transform: uppercase; text-align: center; }
+        input { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #333; background: #fff; color: #000; font-size: 0.95rem; font-weight: 900; text-align: center; outline: none; }
+        
+        .jurados-section { text-align: center; margin: 15px 0; }
+        .jurados-title { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+        .jurados-icons { display: flex; justify-content: center; gap: 8px; }
+        .user-icon { width: 22px; height: 22px; }
+
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 900; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn-iniciar { background: #3b105c; color: #ffffff; border: 2px solid #800db0; }
+        .btn-iniciar.ativo { background: #5c1191; color: #fff; }
+        .btn-encerrar-votacao { background: #e50914; color: #fff; }
+        .btn-finalizar-rodada { background: #800db0; color: #fff; margin-top: 10px; }
+
+        .historico-card { margin-top: 20px; background: #e0e0e0; border-radius: 15px; padding: 12px; color: #000; max-height: 220px; overflow-y: auto; }
+        .historico-card h3 { text-align: center; font-size: 0.9rem; font-weight: 900; text-transform: uppercase; margin-bottom: 10px; color: #000; }
+        .hist-entry { background: #ffffff; border-radius: 10px; padding: 8px; margin-bottom: 8px; font-size: 0.75rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .hist-info { line-height: 1.3; }
+        .hist-icons { display: flex; gap: 3px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Módulo Admin</h1>
+    <div class="app-card">
+        <div class="header-title">MÓDULO <span>ADMIN</span></div>
         
-        <div class="form-group">
-            <label>Nome do(s) Cantor(es)</label>
-            <input type="text" id="inputCantor" placeholder="Ex: João e Maria">
-        </div>
-        <div class="form-group">
-            <label>Artista / Banda</label>
-            <input type="text" id="inputArtista" placeholder="Ex: Marília Mendonça">
-        </div>
-        <div class="form-group">
-            <label>Nome da Música</label>
-            <input type="text" id="inputMusica" placeholder="Ex: Infiel">
+        <div id="formInputs">
+            <div class="form-group">
+                <label>NOME DO(S) CANTOR(ES)</label>
+                <input type="text" id="inputCantor">
+            </div>
+            <div class="form-group">
+                <label>ARTISTA</label>
+                <input type="text" id="inputArtista">
+            </div>
+            <div class="form-group">
+                <label>NOME DA MÚSICA</label>
+                <input type="text" id="inputMusica">
+            </div>
         </div>
 
-        <div class="jurados-status">
-            <p id="txtStatusJurados">Aguardando Jurados (Mínimo 2)</p>
+        <div class="jurados-section">
+            <div class="jurados-title">JURADOS ONLINE</div>
             <div class="jurados-icons" id="iconsJurados"></div>
         </div>
 
-        <button id="btnAcao" class="btn-iniciar" disabled onclick="controlarRodada()">Aguardando Mínimo de Jurados</button>
-        <button id="btnFinalizar" class="btn-finalizar" style="display:none;" onclick="finalizarRodada()">Finalizar Rodada Atual</button>
+        <div id="areaBotoes">
+            <button id="btnIniciar" class="btn-main btn-iniciar" disabled onclick="iniciar()">INICIAR RODADA</button>
+        </div>
 
-        <div class="historico-box">
-            <h3>Últimas Rodadas</h3>
-            <div id="listaHistorico">Nenhuma rodada realizada ainda.</div>
+        <div class="historico-card">
+            <h3>ÚLTIMAS RODADAS</h3>
+            <div id="listaHistorico"></div>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        let estadoAtual = {};
+        let estado = {};
+
+        function getUserSvg(ativo) {
+            const cor = ativo ? "#00cc55" : "#666666";
+            return `<svg class="user-icon" viewBox="0 0 24 24" fill="${cor}"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+        }
 
         socket.on('updateState', (state) => {
-            estadoAtual = state;
-            atualizarTela();
-        });
+            estado = state;
+            const juradosIds = Object.keys(state.jurados || {});
+            const total = juradosIds.length;
 
-        function atualizarTela() {
-            const juradosIds = Object.keys(estadoAtual.jurados);
-            const qtdJurados = juradosIds.length;
-            
-            // Renderiza bolinhas de status dos jurados online
             let iconsHtml = '';
             for(let i=0; i<6; i++) {
-                if(i < qtdJurados) {
-                    iconsHtml += `<span class="dot active" title="${estadoAtual.jurados[juradosIds[i]].nome}"></span>`;
-                } else {
-                    iconsHtml += `<span class="dot"></span>`;
-                }
+                iconsHtml += getUserSvg(i < total);
             }
             document.getElementById('iconsJurados').innerHTML = iconsHtml;
 
-            const btn = document.getElementById('btnAcao');
-            const btnFim = document.getElementById('btnFinalizar');
+            const areaBotoes = document.getElementById('areaBotoes');
+            const inputs = document.getElementById('formInputs');
 
-            if (estadoAtual.status === 'aguardando') {
-                if (qtdJurados >= 2) {
-                    document.getElementById('txtStatusJurados').innerText = `Pronto! ${qtdJurados} jurados conectados.`;
-                    btn.disabled = false;
-                    btn.innerText = "Iniciar Rodada";
-                    btn.className = "btn-iniciar";
-                } else {
-                    document.getElementById('txtStatusJurados').innerText = `Aguardando Jurados (${qtdJurados}/2 mínimo)`;
-                    btn.disabled = true;
-                    btn.innerText = "Mínimo de 2 Jurados Necessário";
-                    btn.className = "btn-iniciar";
-                }
-                btnFim.style.display = 'none';
-            } else if (estadoAtual.status === 'rodando') {
-                document.getElementById('txtStatusJurados').innerText = "Rodada em Andamento!";
-                btn.style.display = 'none';
-                btnFim.style.display = 'block';
+            if (state.status === 'aguardando') {
+                inputs.style.display = 'block';
+                areaBotoes.innerHTML = `<button id="btnIniciar" class="btn-main btn-iniciar ${total >= 2 ? 'ativo' : ''}" ${total < 2 ? 'disabled' : ''} onclick="iniciar()">INICIAR RODADA</button>`;
+            } else if (state.status === 'rodando') {
+                inputs.style.display = 'block';
+                areaBotoes.innerHTML = `<button class="btn-main btn-encerrar-votacao" onclick="encerrarVotacao()">FINALIZAR VOTAÇÃO</button>`;
+            } else if (state.status === 'votacao_encerrada') {
+                inputs.style.display = 'none';
+                areaBotoes.innerHTML = `<button class="btn-main btn-finalizar-rodada" onclick="finalizarRodada()">FINALIZAR RODADA</button>`;
             }
 
-            // Histórico
-            if (estadoAtual.historico.length > 0) {
-                let histHtml = '';
-                estadoAtual.historico.forEach(h => {
-                    histHtml += `<div class="historico-item">
-                        <strong>${h.cantor}</strong> cantou ${h.musica} (${h.artista})<br>
-                        <small>Horário: ${h.dataHora}</small>
-                    </div>`;
+            if (state.historico && state.historico.length > 0) {
+                let hHtml = '';
+                state.historico.forEach(h => {
+                    let iconsList = '';
+                    h.juradosDetalhados.forEach(j => {
+                        iconsList += getUserSvg(j.virou);
+                    });
+                    hHtml += `
+                        <div class="hist-entry">
+                            <div class="hist-info">
+                                <strong>NOME DO(S) CANTOR(ES):</strong> ${h.cantor}<br>
+                                <strong>ARTISTA:</strong> ${h.artista}<br>
+                                <strong>MÚSICA:</strong> ${h.musica}<br>
+                                <small>${h.dataHora}</small>
+                            </div>
+                            <div class="hist-icons">${iconsList}</div>
+                        </div>
+                    `;
                 });
-                document.getElementById('listaHistorico').innerHTML = histHtml;
+                document.getElementById('listaHistorico').innerHTML = hHtml;
             }
-        }
+        });
 
-        function controlarRodada() {
-            const cantor = document.getElementById('inputCantor').value || 'Cantor(a)';
+        function iniciar() {
+            const cantor = document.getElementById('inputCantor').value || 'Cantor';
             const artista = document.getElementById('inputArtista').value || 'Artista';
             const musica = document.getElementById('inputMusica').value || 'Música';
-
             socket.emit('iniciarRodada', { cantor, artista, musica });
         }
 
+        function encerrarVotacao() {
+            socket.emit('encerrarVotacao');
+        }
+
         function finalizarRodada() {
+            document.getElementById('inputCantor').value = '';
+            document.getElementById('inputArtista').value = '';
+            document.getElementById('inputMusica').value = '';
             socket.emit('finalizarRodada');
-            document.getElementById('btnFinalizar').style.display = 'none';
-            document.getElementById('btnAcao').style.display = 'block';
         }
     </script>
 </body>
