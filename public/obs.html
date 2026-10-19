@@ -7,9 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
-        body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+        body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; cursor: pointer; }
 
-        /* Mensagens de Topo */
         .status-container { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
         .status-container.active { display: block; }
 
@@ -22,13 +21,11 @@
         .pill-red { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
         .txt-sub-red { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
 
-        /* Fileira de Cadeiras */
         .cadeiras-container { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
         .cadeiras-container.active { display: flex; }
 
         .chair-card { display: flex; flex-direction: column; align-items: center; width: 110px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         
-        /* Efeito de aumento rápido quando virar a cadeira */
         .chair-card.virou {
             animation: popCadeira 0.5s ease-out forwards;
         }
@@ -44,11 +41,12 @@
         .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; }
         
         .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
+
+        #audioNotice { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; padding: 5px 10px; border-radius: 5px; font-size: 0.7rem; font-weight: bold; pointer-events: none; }
     </style>
 </head>
-<body>
+<body onclick="destravarAudio()">
 
-    <!-- Telas de Status de Topo -->
     <div id="stAguardando" class="status-container">
         <div class="txt-aguardando-1">AGUARDANDO JURADOS</div>
         <div class="txt-aguardando-2">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
@@ -64,21 +62,34 @@
         <div class="txt-sub-red">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
     </div>
 
-    <!-- Fileira com as Cadeiras dos Jurados -->
     <div id="cadeirasRow" class="cadeiras-container"></div>
+    <div id="audioNotice">Clique na tela para ativar som</div>
 
-    <!-- Efeito Sonoro da Cadeira -->
     <audio id="audioVirada" src="/som-virada.mp3" preload="auto"></audio>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
         const audio = document.getElementById('audioVirada');
+        let audioLiberado = false;
+
+        function destravarAudio() {
+            if (audio) {
+                audio.play().then(() => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                    audioLiberado = true;
+                    document.getElementById('audioNotice').style.display = 'none';
+                }).catch(e => console.log('Erro ao destravar:', e));
+            }
+        }
 
         socket.on('cadeiraVirou', () => {
             if (audio) {
                 audio.currentTime = 0;
-                audio.play().catch(e => console.log('Aguardando interação no navegador para áudio:', e));
+                audio.play().catch(e => {
+                    console.log('Bloqueado pelo navegador. Clique na página do OBS uma vez para destravar o som.', e);
+                });
             }
         });
 
