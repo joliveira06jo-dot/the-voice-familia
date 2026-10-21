@@ -9,12 +9,20 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; cursor: pointer; }
 
-        /* Mensagens de Topo Gerais */
+        /* Banner de Status de Topo */
         .status-container { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
         .status-container.active { display: block; }
 
         .txt-aguardando-1 { color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 12px rgba(0,0,0,0.9); }
-        .txt-aguardando-2 { color: #cccccc; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 4px; text-shadow: 0 0 10px rgba(0,0,0,0.9); }
+
+        /* Animação Suave de Texto Deslizante */
+        .text-anim-box { position: relative; height: 35px; overflow: hidden; margin-top: 4px; }
+        .anim-item { position: absolute; width: 100%; left: 0; top: 0; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; opacity: 0; transform: translateY(-25px); }
+        .anim-item.active { opacity: 1; transform: translateY(0); }
+        .anim-item.exit { opacity: 0; transform: translateY(25px); }
+
+        .txt-dynam-main { color: #ffffff; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,0,0,0.9); }
+        .txt-dynam-sub { color: #cccccc; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,0,0,0.9); }
 
         .pill-green { display: inline-block; background: #00cc55; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #00cc55; }
         .txt-sub-green { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
@@ -22,7 +30,7 @@
         .pill-red { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
         .txt-sub-red { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
 
-        /* Fileira de Cadeiras Normal no Topo (Rodada em Andamento) */
+        /* Fileira de Cadeiras Normais no Topo */
         .cadeiras-container { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
         .cadeiras-container.active { display: flex; }
 
@@ -40,7 +48,7 @@
         .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; }
         .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
 
-        /* --- TELA DE RESULTADO GIGANTE NO CENTRO --- */
+        /* Overlay do Resultado Gigante */
         .resultado-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 2, 20, 0.82); backdrop-filter: blur(8px); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
         .resultado-overlay.active { display: flex; }
 
@@ -50,12 +58,12 @@
 
         .res-chair-card { display: flex; flex-direction: column; align-items: center; transition: all 0.4s ease; }
         
-        /* Cadeira Virada no Resultado (Grande) */
+        /* Cadeira Virada */
         .res-chair-card.virou { transform: scale(1.15); }
         .res-chair-card.virou .res-chair-img { width: 180px; height: 210px; filter: drop-shadow(0 0 25px #e50914); }
         .res-chair-card.virou .res-jurado-tag { background: #e50914; border: 2px solid #ffffff; color: #ffffff; font-size: 1.1rem; padding: 6px 18px; box-shadow: 0 0 20px #e50914; }
 
-        /* Cadeira Não Virada no Resultado (Menor) */
+        /* Cadeira Não Virada */
         .res-chair-card.nao-virou { opacity: 0.75; }
         .res-chair-card.nao-virou .res-chair-img { width: 120px; height: 145px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8)); }
         .res-chair-card.nao-virou .res-jurado-tag { background: #1a1a1a; border: 2px solid #555555; color: #aaaaaa; font-size: 0.9rem; padding: 5px 14px; }
@@ -68,10 +76,20 @@
 </head>
 <body>
 
-    <!-- Avisos de Status no Topo -->
+    <!-- Avisos de Status -->
     <div id="stAguardando" class="status-container">
-        <div class="txt-aguardando-1">AGUARDANDO JURADOS</div>
-        <div class="txt-aguardando-2">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+        <div class="txt-aguardando-1">AGUARDANDO</div>
+        
+        <div class="text-anim-box">
+            <div id="obsTxt1" class="anim-item active">
+                <div class="txt-dynam-main">OUTROS JURADOS</div>
+                <div class="txt-dynam-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+            </div>
+            <div id="obsTxt2" class="anim-item">
+                <div class="txt-dynam-main">PRÓXIMA MÚSICA</div>
+                <div class="txt-dynam-sub">O PRÓXIMO CANTOR ESTÁ AQUECENDO O GOGÓ</div>
+            </div>
+        </div>
     </div>
 
     <div id="stIniciada" class="status-container">
@@ -84,10 +102,10 @@
         <div class="txt-sub-red">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
     </div>
 
-    <!-- Cadeiras Normais no Topo -->
+    <!-- Cadeiras no Topo -->
     <div id="cadeirasRow" class="cadeiras-container"></div>
 
-    <!-- Tela do RESULTADO CENTRAL GIGANTE -->
+    <!-- Tela do Resultado Gigante -->
     <div id="screenResultado" class="resultado-overlay">
         <div class="resultado-title">SEU RESULTADO</div>
         <div id="resultadoCadeirasRow" class="resultado-cadeiras-row"></div>
@@ -119,6 +137,23 @@
         document.addEventListener('click', unlockAudio);
         document.addEventListener('touchstart', unlockAudio);
 
+        // Alternador de Frase Dinâmica
+        let currentTextIndex = 0;
+        setInterval(() => {
+            const item1 = document.getElementById('obsTxt1');
+            const item2 = document.getElementById('obsTxt2');
+
+            if (currentTextIndex === 0) {
+                item1.className = 'anim-item exit';
+                item2.className = 'anim-item active';
+                currentTextIndex = 1;
+            } else {
+                item2.className = 'anim-item exit';
+                item1.className = 'anim-item active';
+                currentTextIndex = 0;
+            }
+        }, 4000);
+
         socket.on('cadeiraVirou', () => {
             if (audioVirada) {
                 audioVirada.currentTime = 0;
@@ -129,7 +164,7 @@
         socket.on('tocarSomResultado', () => {
             if (audioResultado) {
                 audioResultado.currentTime = 0;
-                audioResultado.play().catch(e => console.log('Áudio de resultado bloqueado:', e));
+                audioResultado.play().catch(e => console.log('Áudio resultado bloqueado:', e));
             }
         });
 
