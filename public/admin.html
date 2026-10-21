@@ -37,14 +37,20 @@
         .card-andamento-dark { width: 100%; max-width: 400px; background: rgba(10, 2, 20, 0.5); border: 3px solid #ffffff; border-radius: 25px; padding: 22px 16px; text-align: center; backdrop-filter: blur(8px); box-shadow: 0 0 30px rgba(255, 255, 255, 0.25); }
         .andamento-title { color: #ffffff; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; letter-spacing: 0.5px; text-shadow: 0 2px 6px rgba(0,0,0,0.8); }
 
-        .timer-container { position: relative; width: 170px; height: 170px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
+        .timer-container { position: relative; width: 160px; height: 160px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
         .timer-svg { width: 100%; height: 100%; }
 
-        .buttons-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
-        .btn-encerrar-votacao { width: 100%; background: #4c2882; color: #ffffff; border: 2px solid #6b3ba7; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
-        .btn-finalizar-rodada { width: 100%; background: #ffffff; color: #951573; border: 3px solid #ffffff; padding: 15px; border-radius: 14px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        /* Pilha de 3 Botões na Sequência Lógica */
+        .buttons-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+        
+        .btn-step { width: 100%; padding: 14px; border-radius: 14px; font-weight: 900; font-size: 1.05rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; border: none; }
+        .btn-step:disabled { background: #221b2b; color: #555555; border: 2px solid #33283f; cursor: not-allowed; box-shadow: none; }
 
-        /* Card 3: ÚLTIMAS RODADAS (Expansível para baixo) */
+        .btn-encerrar { background: #4c2882; color: #ffffff; border: 2px solid #6b3ba7; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .btn-mostrar-resultado { background: #951573; color: #ffffff; border: 2px solid #bd2295; box-shadow: 0 4px 15px rgba(149, 21, 115, 0.5); }
+        .btn-finalizar { background: #ffffff; color: #951573; border: 3px solid #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+
+        /* Card 3: ÚLTIMAS RODADAS */
         .historico-container { width: 100%; max-width: 400px; margin-top: 15px; background: rgba(255, 255, 255, 0.95); border-radius: 22px; padding: 16px; color: #000000; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
         .historico-title { text-align: center; font-size: 1rem; font-weight: 900; text-transform: uppercase; margin-bottom: 12px; color: #000000; }
 
@@ -65,7 +71,7 @@
         </div>
     </div>
 
-    <!-- Estado 1: Formulário (Fundo Escuro 50% Transparente) -->
+    <!-- Estado 1: Formulário de Pré-Rodada -->
     <div id="viewForm" class="card-form-dark">
         <div class="form-group">
             <label>NOME DO(S) CANTOR(ES)</label>
@@ -88,7 +94,7 @@
         <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">INICIAR RODADA</button>
     </div>
 
-    <!-- Estado 2: Rodada em Andamento -->
+    <!-- Estado 2: Rodada em Andamento & Sequência de Ações -->
     <div id="viewAndamento" class="card-andamento-dark" style="display:none;">
         <div class="andamento-title">RODADA EM ANDAMENTO</div>
         
@@ -106,9 +112,11 @@
             <div class="jurados-icons" id="iconsAndamento"></div>
         </div>
 
+        <!-- Três Botões na Ordem Solicitada -->
         <div class="buttons-stack">
-            <button class="btn-encerrar-votacao" onclick="encerrarVotacao()">ENCERRAR VOTAÇÃO</button>
-            <button class="btn-finalizar-rodada" onclick="finalizarRodada()">FINALIZAR RODADA</button>
+            <button id="btnEncerrarVotacao" class="btn-step btn-encerrar" onclick="encerrarVotacao()">1. ENCERRAR VOTAÇÃO</button>
+            <button id="btnMostrarResultado" class="btn-step btn-mostrar-resultado" disabled onclick="mostrarResultado()">2. MOSTRAR RESULTADO</button>
+            <button id="btnFinalizarRodada" class="btn-step btn-finalizar" disabled onclick="finalizarRodada()">3. FINALIZAR RODADA</button>
         </div>
     </div>
 
@@ -146,20 +154,34 @@
             const viewAndamento = document.getElementById('viewAndamento');
             const btnIniciar = document.getElementById('btnIniciar');
 
+            const btnEncerrar = document.getElementById('btnEncerrarVotacao');
+            const btnMostrar = document.getElementById('btnMostrarResultado');
+            const btnFinalizar = document.getElementById('btnFinalizarRodada');
+
             if (state.status === 'aguardando') {
                 viewForm.style.display = 'block';
                 viewAndamento.style.display = 'none';
 
-                if (total >= 2) {
-                    btnIniciar.disabled = false;
-                    btnIniciar.classList.add('active');
-                } else {
-                    btnIniciar.disabled = true;
-                    btnIniciar.classList.remove('active');
-                }
-            } else if (state.status === 'rodando' || state.status === 'votacao_encerrada') {
+                btnIniciar.disabled = total < 2;
+                if (total >= 2) btnIniciar.classList.add('active'); else btnIniciar.classList.remove('active');
+
+            } else {
                 viewForm.style.display = 'none';
                 viewAndamento.style.display = 'block';
+
+                if (state.status === 'rodando') {
+                    btnEncerrar.disabled = false;
+                    btnMostrar.disabled = true;
+                    btnFinalizar.disabled = true;
+                } else if (state.status === 'votacao_encerrada') {
+                    btnEncerrar.disabled = true;
+                    btnMostrar.disabled = false;
+                    btnFinalizar.disabled = false;
+                } else if (state.status === 'resultado') {
+                    btnEncerrar.disabled = true;
+                    btnMostrar.disabled = true;
+                    btnFinalizar.disabled = false;
+                }
             }
 
             if (state.historico && state.historico.length > 0) {
@@ -196,6 +218,10 @@
 
         function encerrarVotacao() {
             socket.emit('encerrarVotacao');
+        }
+
+        function mostrarResultado() {
+            socket.emit('mostrarResultado');
         }
 
         function finalizarRodada() {
