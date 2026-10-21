@@ -34,14 +34,21 @@
         .jurados-icons { display: flex; justify-content: center; gap: 8px; }
         .user-icon { width: 38px; height: 38px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
-        /* Tela 2: Radar de Aguardando */
-        .radar-box { width: 130px; height: 130px; margin: 10px auto 15px auto; position: relative; }
+        /* Tela 2: Radar e Frases Dinâmicas de Aguardando */
+        .radar-box { width: 130px; height: 130px; margin: 10px auto 12px auto; position: relative; }
         .radar-svg { width: 100%; height: 100%; }
         .radar-sweep { transform-origin: 50px 50px; animation: spinRadar 2.2s linear infinite; }
         @keyframes spinRadar { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .txt-aguardando-title { color: #951573; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 6px; }
-        .txt-aguardando-sub { color: #555555; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ag-static-title { color: #951573; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; line-height: 1; }
+
+        .ag-anim-container { position: relative; height: 50px; overflow: hidden; margin-top: 4px; }
+        .ag-anim-item { position: absolute; width: 100%; left: 0; top: 0; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; opacity: 0; transform: translateY(-25px); }
+        .ag-anim-item.active { opacity: 1; transform: translateY(0); }
+        .ag-anim-item.exit { opacity: 0; transform: translateY(25px); }
+
+        .txt-dynam-title { color: #951573; font-size: 1.15rem; font-weight: 900; text-transform: uppercase; line-height: 1.2; }
+        .txt-dynam-sub { color: #555555; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
 
         /* Tela 3: Vagas Lotadas */
         .alert-svg { width: 120px; height: 120px; margin: 10px auto 15px auto; display: block; }
@@ -53,11 +60,13 @@
         .txt-instrucao { color: #951573; font-size: 0.95rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 8px; }
         .txt-atencao { color: #666666; font-size: 0.65rem; font-weight: 800; margin-bottom: 14px; }
 
+        /* Caixa de Demonstração de Cadeira */
         .preview-chairs-box { background: #e0e0e0; border-radius: 20px; padding: 16px 10px; display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 18px; min-height: 150px; }
         .chair-small { width: 55px; height: 70px; object-fit: contain; filter: opacity(0.85); }
         .arrow-grey { font-size: 2.2rem; color: #888888; font-weight: 900; line-height: 1; }
         .chair-large { width: 110px; height: 135px; object-fit: contain; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.35)); }
 
+        /* Botão Virar a Cadeira */
         .btn-virar-cadeira {
             position: relative;
             overflow: hidden;
@@ -107,6 +116,7 @@
         .circle-icon { background: #ffffff; color: #951573; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 900; z-index: 2; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
         .btn-text { z-index: 2; letter-spacing: 0.5px; }
 
+        /* Estilos dos Cards Finais */
         .pill-encerrada { background: #3c3c3c; color: #ffffff; font-size: 1.05rem; font-weight: 900; padding: 10px; border-radius: 12px; text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px; }
         .txt-encerrada { color: #3c3c3c; font-size: 0.95rem; font-weight: 900; text-transform: uppercase; line-height: 1.3; margin-bottom: 14px; }
 
@@ -168,6 +178,7 @@
         const socket = io();
         let meuNome = '';
         let estado = {};
+        let textAnimationInterval = null;
 
         function getUserSvg(ativo) {
             const cor = ativo ? "#00cc55" : "#777777";
@@ -196,6 +207,26 @@
             document.getElementById('screenPainel').style.display = 'block';
             document.getElementById('txtOla').innerText = `OLÁ, ${meuNome.toUpperCase()}`;
             atualizarInterface();
+        }
+
+        function iniciarAnimacaoTexto() {
+            if (textAnimationInterval) clearInterval(textAnimationInterval);
+            let idx = 0;
+            textAnimationInterval = setInterval(() => {
+                const el1 = document.getElementById('jurAgTxt1');
+                const el2 = document.getElementById('jurAgTxt2');
+                if (!el1 || !el2) return;
+
+                if (idx === 0) {
+                    el1.className = 'ag-anim-item exit';
+                    el2.className = 'ag-anim-item active';
+                    idx = 1;
+                } else {
+                    el2.className = 'ag-anim-item exit';
+                    el1.className = 'ag-anim-item active';
+                    idx = 0;
+                }
+            }, 4000);
         }
 
         function atualizarInterface() {
@@ -231,57 +262,71 @@
                             </g>
                         </svg>
                     </div>
-                    <div class="txt-aguardando-title">AGUARDANDO OUTROS JURADOS</div>
-                    <div class="txt-aguardando-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+                    <div class="ag-static-title">AGUARDANDO</div>
+                    <div class="ag-anim-container">
+                        <div id="jurAgTxt1" class="ag-anim-item active">
+                            <div class="txt-dynam-title">OUTROS JURADOS</div>
+                            <div class="txt-dynam-sub">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
+                        </div>
+                        <div id="jurAgTxt2" class="ag-anim-item">
+                            <div class="txt-dynam-title">PRÓXIMA MÚSICA</div>
+                            <div class="txt-dynam-sub">O PRÓXIMO CANTOR ESTÁ AQUECENDO O GOGÓ</div>
+                        </div>
+                    </div>
                 `;
-            } else if (status === 'rodando') {
-                if(jaVirei) {
-                    box.innerHTML = `
-                        <div class="pill-iniciada">RODADA INICIADA</div>
-                        <div class="txt-instrucao" style="margin-top:10px; margin-bottom:12px;">VOCÊ VIROU A CADEIRA!</div>
-                        <div class="result-box magenta">
-                            <img class="result-chair-img" src="/cadeira-colorida.png" alt="Cadeira Acesa">
-                            <div class="result-banner magenta">VIROU A CADEIRA</div>
-                        </div>
-                    `;
-                } else {
-                    box.innerHTML = `
-                        <div class="pill-iniciada">RODADA INICIADA</div>
-                        <div class="txt-instrucao">AVALIE O CANTOR E, SE DESEJAR, CLIQUE ABAIXO PARA VIRAR A CADEIRA</div>
-                        <div class="txt-atencao">Atenção: Não é possível "desvirar" a cadeira depois.</div>
-                        
-                        <div class="preview-chairs-box">
-                            <img class="chair-small" src="/cadeira-pb.png" alt="Cadeira Desligada">
-                            <span class="arrow-grey">➔</span>
-                            <img class="chair-large" src="/cadeira-colorida.png" alt="Cadeira Acesa">
-                        </div>
+                iniciarAnimacaoTexto();
+            } else {
+                if (textAnimationInterval) clearInterval(textAnimationInterval);
 
-                        <button class="btn-virar-cadeira" onclick="virar()">
-                            <span class="circle-icon">❯</span>
-                            <span class="btn-text">VIRAR A CADEIRA</span>
-                            <span class="circle-icon">❯</span>
-                        </button>
-                    `;
-                }
-            } else if (status === 'votacao_encerrada' || status === 'resultado') {
-                if(jaVirei) {
-                    box.innerHTML = `
-                        <div class="pill-iniciada">VOTAÇÃO ENCERRADA</div>
-                        <div class="txt-instrucao" style="margin-top:10px; margin-bottom:12px;">VOCÊ VIROU A CADEIRA!</div>
-                        <div class="result-box magenta">
-                            <img class="result-chair-img" src="/cadeira-colorida.png" alt="Cadeira Acesa">
-                            <div class="result-banner magenta">VIROU A CADEIRA</div>
-                        </div>
-                    `;
-                } else {
-                    box.innerHTML = `
-                        <div class="pill-encerrada">RODADA ENCERRADA</div>
-                        <div class="txt-encerrada">O TEMPO ACABOU E VOCÊ NÃO VIROU A CADEIRA!</div>
-                        <div class="result-box grey">
-                            <img class="result-chair-img" src="/cadeira-pb.png" alt="Cadeira Desligada">
-                            <div class="result-banner grey">NÃO VIROU A CADEIRA</div>
-                        </div>
-                    `;
+                if (status === 'rodando') {
+                    if(jaVirei) {
+                        box.innerHTML = `
+                            <div class="pill-iniciada">RODADA INICIADA</div>
+                            <div class="txt-instrucao" style="margin-top:10px; margin-bottom:12px;">VOCÊ VIROU A CADEIRA!</div>
+                            <div class="result-box magenta">
+                                <img class="result-chair-img" src="/cadeira-colorida.png" alt="Cadeira Acesa">
+                                <div class="result-banner magenta">VIROU A CADEIRA</div>
+                            </div>
+                        `;
+                    } else {
+                        box.innerHTML = `
+                            <div class="pill-iniciada">RODADA INICIADA</div>
+                            <div class="txt-instrucao">AVALIE O CANTOR E, SE DESEJAR, CLIQUE ABAIXO PARA VIRAR A CADEIRA</div>
+                            <div class="txt-atencao">Atenção: Não é possível "desvirar" a cadeira depois.</div>
+                            
+                            <div class="preview-chairs-box">
+                                <img class="chair-small" src="/cadeira-pb.png" alt="Cadeira Desligada">
+                                <span class="arrow-grey">➔</span>
+                                <img class="chair-large" src="/cadeira-colorida.png" alt="Cadeira Acesa">
+                            </div>
+
+                            <button class="btn-virar-cadeira" onclick="virar()">
+                                <span class="circle-icon">❯</span>
+                                <span class="btn-text">VIRAR A CADEIRA</span>
+                                <span class="circle-icon">❯</span>
+                            </button>
+                        `;
+                    }
+                } else if (status === 'votacao_encerrada' || status === 'resultado') {
+                    if(jaVirei) {
+                        box.innerHTML = `
+                            <div class="pill-iniciada">VOTAÇÃO ENCERRADA</div>
+                            <div class="txt-instrucao" style="margin-top:10px; margin-bottom:12px;">VOCÊ VIROU A CADEIRA!</div>
+                            <div class="result-box magenta">
+                                <img class="result-chair-img" src="/cadeira-colorida.png" alt="Cadeira Acesa">
+                                <div class="result-banner magenta">VIROU A CADEIRA</div>
+                            </div>
+                        `;
+                    } else {
+                        box.innerHTML = `
+                            <div class="pill-encerrada">RODADA ENCERRADA</div>
+                            <div class="txt-encerrada">O TEMPO ACABOU E VOCÊ NÃO VIROU A CADEIRA!</div>
+                            <div class="result-box grey">
+                                <img class="result-chair-img" src="/cadeira-pb.png" alt="Cadeira Desligada">
+                                <div class="result-banner grey">NÃO VIROU A CADEIRA</div>
+                            </div>
+                        `;
+                    }
                 }
             }
         }
