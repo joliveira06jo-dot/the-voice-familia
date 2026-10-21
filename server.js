@@ -10,7 +10,7 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, 'public')));
 
 let gameState = {
-    status: 'aguardando', // 'aguardando', 'rodando', 'votacao_encerrada', 'finalizado'
+    status: 'aguardando', // 'aguardando', 'rodando', 'votacao_encerrada', 'resultado', 'finalizado'
     cantor: '',
     artista: '',
     musica: '',
@@ -50,6 +50,12 @@ io.on('connection', (socket) => {
     socket.on('encerrarVotacao', () => {
         gameState.status = 'votacao_encerrada';
         io.emit('updateState', gameState);
+    });
+
+    socket.on('mostrarResultado', () => {
+        gameState.status = 'resultado';
+        io.emit('updateState', gameState);
+        io.emit('tocarSomResultado');
     });
 
     socket.on('finalizarRodada', () => {
