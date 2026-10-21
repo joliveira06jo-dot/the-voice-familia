@@ -9,6 +9,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
         body { background: transparent !important; width: 100vw; height: 100vh; overflow: hidden; position: relative; cursor: pointer; }
 
+        /* Mensagens de Topo Gerais */
         .status-container { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); text-align: center; width: 100%; display: none; }
         .status-container.active { display: block; }
 
@@ -21,14 +22,12 @@
         .pill-red { display: inline-block; background: #e50914; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #e50914; }
         .txt-sub-red { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
 
+        /* Fileira de Cadeiras Normal no Topo (Rodada em Andamento) */
         .cadeiras-container { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
         .cadeiras-container.active { display: flex; }
 
         .chair-card { display: flex; flex-direction: column; align-items: center; width: 110px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        
-        .chair-card.virou {
-            animation: popCadeira 0.5s ease-out forwards;
-        }
+        .chair-card.virou { animation: popCadeira 0.5s ease-out forwards; }
 
         @keyframes popCadeira {
             0% { transform: scale(1); }
@@ -39,14 +38,37 @@
         .chair-img { width: 95px; height: 115px; object-fit: contain; filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.8)); }
 
         .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; }
-        
         .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
+
+        /* --- TELA DE RESULTADO GIGANTE NO CENTRO --- */
+        .resultado-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(10, 2, 20, 0.82); backdrop-filter: blur(8px); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .resultado-overlay.active { display: flex; }
+
+        .resultado-title { color: #ffffff; font-size: 3.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 3px; text-shadow: 0 0 20px rgba(0,0,0,0.9), 0 4px 10px #000000; margin-bottom: 30px; }
+
+        .resultado-cadeiras-row { display: flex; justify-content: center; align-items: flex-end; gap: 25px; width: 100%; max-width: 1200px; }
+
+        .res-chair-card { display: flex; flex-direction: column; align-items: center; transition: all 0.4s ease; }
+        
+        /* Cadeira Virada no Resultado (Grande) */
+        .res-chair-card.virou { transform: scale(1.15); }
+        .res-chair-card.virou .res-chair-img { width: 180px; height: 210px; filter: drop-shadow(0 0 25px #e50914); }
+        .res-chair-card.virou .res-jurado-tag { background: #e50914; border: 2px solid #ffffff; color: #ffffff; font-size: 1.1rem; padding: 6px 18px; box-shadow: 0 0 20px #e50914; }
+
+        /* Cadeira Não Virada no Resultado (Menor) */
+        .res-chair-card.nao-virou { opacity: 0.75; }
+        .res-chair-card.nao-virou .res-chair-img { width: 120px; height: 145px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.8)); }
+        .res-chair-card.nao-virou .res-jurado-tag { background: #1a1a1a; border: 2px solid #555555; color: #aaaaaa; font-size: 0.9rem; padding: 5px 14px; }
+
+        .res-chair-img { object-fit: contain; transition: all 0.4s ease; }
+        .res-jurado-tag { margin-top: -10px; border-radius: 8px; font-weight: 900; text-transform: uppercase; text-align: center; white-space: nowrap; z-index: 2; }
 
         #audioNotice { position: absolute; bottom: 12px; right: 12px; background: rgba(0,0,0,0.85); color: #ffffff; padding: 6px 14px; border-radius: 8px; font-size: 0.75rem; font-weight: 900; pointer-events: none; border: 2px solid #e50914; text-transform: uppercase; box-shadow: 0 0 10px rgba(229, 9, 20, 0.6); }
     </style>
 </head>
 <body>
 
+    <!-- Avisos de Status no Topo -->
     <div id="stAguardando" class="status-container">
         <div class="txt-aguardando-1">AGUARDANDO JURADOS</div>
         <div class="txt-aguardando-2">É NECESSÁRIO NO MÍNIMO DOIS JURADOS</div>
@@ -62,28 +84,35 @@
         <div class="txt-sub-red">OS JURADOS JÁ AVALIARAM A SUA APRESENTAÇÃO!</div>
     </div>
 
+    <!-- Cadeiras Normais no Topo -->
     <div id="cadeirasRow" class="cadeiras-container"></div>
+
+    <!-- Tela do RESULTADO CENTRAL GIGANTE -->
+    <div id="screenResultado" class="resultado-overlay">
+        <div class="resultado-title">SEU RESULTADO</div>
+        <div id="resultadoCadeirasRow" class="resultado-cadeiras-row"></div>
+    </div>
+
     <div id="audioNotice">Clique na tela uma vez para ativar o som</div>
 
+    <!-- Áudios -->
     <audio id="audioVirada" src="/som-virada.mp3" preload="auto"></audio>
+    <audio id="audioResultado" src="/som-resultado.mp3" preload="auto"></audio>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        const audioElem = document.getElementById('audioVirada');
+        const audioVirada = document.getElementById('audioVirada');
+        const audioResultado = document.getElementById('audioResultado');
         let audioUnlocked = false;
 
         function unlockAudio() {
-            if (!audioUnlocked && audioElem) {
-                audioElem.play().then(() => {
-                    audioElem.pause();
-                    audioElem.currentTime = 0;
-                    audioUnlocked = true;
-                    const notice = document.getElementById('audioNotice');
-                    if (notice) notice.style.display = 'none';
-                }).catch(err => {
-                    console.log('Aguardando clique para liberar áudio:', err);
-                });
+            if (!audioUnlocked) {
+                if (audioVirada) audioVirada.play().then(() => { audioVirada.pause(); audioVirada.currentTime = 0; }).catch(() => {});
+                if (audioResultado) audioResultado.play().then(() => { audioResultado.pause(); audioResultado.currentTime = 0; }).catch(() => {});
+                audioUnlocked = true;
+                const notice = document.getElementById('audioNotice');
+                if (notice) notice.style.display = 'none';
             }
         }
 
@@ -91,11 +120,16 @@
         document.addEventListener('touchstart', unlockAudio);
 
         socket.on('cadeiraVirou', () => {
-            if (audioElem) {
-                audioElem.currentTime = 0;
-                audioElem.play().catch(e => {
-                    console.log('Autoplay bloqueado pelo navegador. Clique na tela para liberar o som.', e);
-                });
+            if (audioVirada) {
+                audioVirada.currentTime = 0;
+                audioVirada.play().catch(e => console.log('Áudio bloqueado:', e));
+            }
+        });
+
+        socket.on('tocarSomResultado', () => {
+            if (audioResultado) {
+                audioResultado.currentTime = 0;
+                audioResultado.play().catch(e => console.log('Áudio de resultado bloqueado:', e));
             }
         });
 
@@ -104,11 +138,13 @@
             const stIniciada = document.getElementById('stIniciada');
             const stFinalizada = document.getElementById('stFinalizada');
             const cadeirasRow = document.getElementById('cadeirasRow');
+            const screenResultado = document.getElementById('screenResultado');
 
             stAguardando.classList.remove('active');
             stIniciada.classList.remove('active');
             stFinalizada.classList.remove('active');
             cadeirasRow.classList.remove('active');
+            screenResultado.classList.remove('active');
 
             if (state.status === 'aguardando') {
                 stAguardando.classList.add('active');
@@ -127,8 +163,23 @@
                     `;
                 });
                 cadeirasRow.innerHTML = html;
-            } else if (state.status === 'votacao_encerrada' || state.status === 'finalizado') {
+            } else if (state.status === 'votacao_encerrada') {
                 stFinalizada.classList.add('active');
+            } else if (state.status === 'resultado') {
+                screenResultado.classList.add('active');
+
+                let resHtml = '';
+                Object.values(state.jurados).forEach(j => {
+                    const imgSrc = j.virou ? '/cadeira-colorida.png' : '/cadeira-pb.png';
+                    const cardClass = j.virou ? 'virou' : 'nao-virou';
+                    resHtml += `
+                        <div class="res-chair-card ${cardClass}">
+                            <img class="res-chair-img" src="${imgSrc}" alt="Cadeira">
+                            <div class="res-jurado-tag">${j.nome}</div>
+                        </div>
+                    `;
+                });
+                document.getElementById('resultadoCadeirasRow').innerHTML = resHtml;
             }
         });
     </script>
