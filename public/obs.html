@@ -15,14 +15,14 @@
 
         .txt-aguardando-1 { color: #ffffff; font-size: 2.2rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 12px rgba(0,0,0,0.9); }
 
-        /* Animação Suave de Texto Deslizante */
-        .text-anim-box { position: relative; height: 35px; overflow: hidden; margin-top: 4px; }
+        /* Animação Suave de Texto Deslizante com Espaço Expandido */
+        .text-anim-box { position: relative; height: 65px; overflow: hidden; margin-top: 6px; }
         .anim-item { position: absolute; width: 100%; left: 0; top: 0; transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease; opacity: 0; transform: translateY(-25px); }
         .anim-item.active { opacity: 1; transform: translateY(0); }
         .anim-item.exit { opacity: 0; transform: translateY(25px); }
 
-        .txt-dynam-main { color: #ffffff; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,0,0,0.9); }
-        .txt-dynam-sub { color: #cccccc; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,0,0,0.9); }
+        .txt-dynam-main { color: #ffffff; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; text-shadow: 0 0 10px rgba(0,0,0,0.9); line-height: 1.2; }
+        .txt-dynam-sub { color: #cccccc; font-size: 0.95rem; font-weight: 800; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,0,0,0.9); margin-top: 4px; line-height: 1.2; }
 
         .pill-green { display: inline-block; background: #00cc55; color: #ffffff; font-size: 1.8rem; font-weight: 900; padding: 8px 35px; border-radius: 30px; text-transform: uppercase; box-shadow: 0 0 20px #00cc55; }
         .txt-sub-green { color: #ffffff; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; margin-top: 8px; text-shadow: 0 0 10px #000; }
@@ -34,7 +34,7 @@
         .cadeiras-container { position: absolute; top: 25px; left: 50%; transform: translateX(-50%); display: flex; justify-content: center; gap: 15px; display: none; }
         .cadeiras-container.active { display: flex; }
 
-        .chair-card { display: flex; flex-direction: column; align-items: center; width: 110px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .chair-card { display: flex; flex-direction: column; align-items: center; width: 115px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .chair-card.virou { animation: popCadeira 0.5s ease-out forwards; }
 
         @keyframes popCadeira {
@@ -45,7 +45,7 @@
 
         .chair-img { width: 95px; height: 115px; object-fit: contain; filter: drop-shadow(0px 5px 8px rgba(0,0,0,0.8)); }
 
-        .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; z-index: 2; }
+        .jurado-tag { margin-top: -8px; background: #000000; border: 2px solid #333333; color: #ffffff; padding: 4px 8px; border-radius: 8px; font-size: 0.72rem; font-weight: 900; text-transform: uppercase; text-align: center; width: 100%; max-width: 125px; white-space: nowrap; z-index: 2; letter-spacing: -0.2px; }
         .chair-card.virou .jurado-tag { background: #e50914; border-color: #ffffff; color: #ffffff; box-shadow: 0 0 15px #e50914; }
 
         /* Overlay do Resultado Gigante */
