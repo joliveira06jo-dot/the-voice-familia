@@ -10,7 +10,7 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, 'public')));
 
 let gameState = {
-    status: 'aguardando', // 'aguardando', 'rodando', 'votacao_encerrada', 'resultado', 'finalizado'
+    status: 'aguardando', // 'aguardando', 'rodando', 'votacao_encerrada', 'resultado'
     cantor: '',
     artista: '',
     musica: '',
@@ -62,17 +62,19 @@ io.on('connection', (socket) => {
         const totalJurados = Object.keys(gameState.jurados).length;
         const viraramCount = Object.values(gameState.jurados).filter(j => j.virou).length;
 
-        const resumoRodada = {
-            cantor: gameState.cantor,
-            artista: gameState.artista,
-            musica: gameState.musica,
-            viraramCount: viraramCount,
-            totalJurados: totalJurados,
-            juradosDetalhados: Object.values(gameState.jurados).map(j => ({ nome: j.nome, virou: j.virou })),
-            dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-        };
+        if (gameState.cantor || gameState.musica) {
+            const resumoRodada = {
+                cantor: gameState.cantor,
+                artista: gameState.artista,
+                musica: gameState.musica,
+                viraramCount: viraramCount,
+                totalJurados: totalJurados,
+                juradosDetalhados: Object.values(gameState.jurados).map(j => ({ nome: j.nome, virou: j.virou })),
+                dataHora: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            };
+            gameState.historico.unshift(resumoRodada);
+        }
         
-        gameState.historico.unshift(resumoRodada);
         gameState.status = 'aguardando';
         gameState.cantor = '';
         gameState.artista = '';
