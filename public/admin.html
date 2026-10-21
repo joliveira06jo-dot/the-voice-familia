@@ -40,7 +40,7 @@
         .timer-container { position: relative; width: 160px; height: 160px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; }
         .timer-svg { width: 100%; height: 100%; }
 
-        /* Pilha de 3 Botões na Sequência Lógica */
+        /* Pilha de Botões com Ordem Lógica */
         .buttons-stack { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
         
         .btn-step { width: 100%; padding: 14px; border-radius: 14px; font-weight: 900; font-size: 1.05rem; text-transform: uppercase; cursor: pointer; transition: 0.2s; border: none; }
@@ -71,7 +71,7 @@
         </div>
     </div>
 
-    <!-- Estado 1: Formulário de Pré-Rodada -->
+    <!-- Estado 1: Formulário de Início de Rodada -->
     <div id="viewForm" class="card-form-dark">
         <div class="form-group">
             <label>NOME DO(S) CANTOR(ES)</label>
@@ -91,10 +91,10 @@
             <div class="jurados-icons" id="iconsForm"></div>
         </div>
 
-        <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">INICIAR RODADA</button>
+        <button id="btnIniciar" class="btn-iniciar" disabled onclick="iniciarRodada()">1. INICIAR RODADA</button>
     </div>
 
-    <!-- Estado 2: Rodada em Andamento & Sequência de Ações -->
+    <!-- Estado 2: Rodada em Andamento -->
     <div id="viewAndamento" class="card-andamento-dark" style="display:none;">
         <div class="andamento-title">RODADA EM ANDAMENTO</div>
         
@@ -112,11 +112,11 @@
             <div class="jurados-icons" id="iconsAndamento"></div>
         </div>
 
-        <!-- Três Botões na Ordem Solicitada -->
+        <!-- Botões de Ação -->
         <div class="buttons-stack">
-            <button id="btnEncerrarVotacao" class="btn-step btn-encerrar" onclick="encerrarVotacao()">1. ENCERRAR VOTAÇÃO</button>
-            <button id="btnMostrarResultado" class="btn-step btn-mostrar-resultado" disabled onclick="mostrarResultado()">2. MOSTRAR RESULTADO</button>
-            <button id="btnFinalizarRodada" class="btn-step btn-finalizar" disabled onclick="finalizarRodada()">3. FINALIZAR RODADA</button>
+            <button id="btnEncerrarVotacao" class="btn-step btn-encerrar" onclick="encerrarVotacao()">ENCERRAR VOTAÇÃO</button>
+            <button id="btnMostrarResultado" class="btn-step btn-mostrar-resultado" disabled onclick="mostrarResultado()">MOSTRAR RESULTADO</button>
+            <button id="btnFinalizarRodada" class="btn-step btn-finalizar" onclick="finalizarRodada()">FINALIZAR RODADA</button>
         </div>
     </div>
 
@@ -156,7 +156,6 @@
 
             const btnEncerrar = document.getElementById('btnEncerrarVotacao');
             const btnMostrar = document.getElementById('btnMostrarResultado');
-            const btnFinalizar = document.getElementById('btnFinalizarRodada');
 
             if (state.status === 'aguardando') {
                 viewForm.style.display = 'block';
@@ -172,15 +171,12 @@
                 if (state.status === 'rodando') {
                     btnEncerrar.disabled = false;
                     btnMostrar.disabled = true;
-                    btnFinalizar.disabled = true;
                 } else if (state.status === 'votacao_encerrada') {
                     btnEncerrar.disabled = true;
                     btnMostrar.disabled = false;
-                    btnFinalizar.disabled = false;
                 } else if (state.status === 'resultado') {
                     btnEncerrar.disabled = true;
                     btnMostrar.disabled = true;
-                    btnFinalizar.disabled = false;
                 }
             }
 
